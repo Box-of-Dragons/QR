@@ -1,8 +1,8 @@
 name: Release
 
 # Releases are always manual — Actions → Release → Run workflow.
-# QR deploys by manual scp (the VPS docroot is not a git repo), so this
-# workflow only plans/syncs/tags/releases.
+# QR deploys by manual scp (the VPS docroot is not a git repo), so the shared
+# workflow's deploy job is disabled here — this only plans/syncs/tags/releases.
 # All release policy lives in the shared workflow (StructuredChaos docs/git-rules.md).
 
 on:
@@ -13,4 +13,5 @@ jobs:
     uses: Box-of-Dragons/StructuredChaos/.github/workflows/family-release.yml@master
     with:
       release-branch: master
+      deploy: false
     secrets: inherit
