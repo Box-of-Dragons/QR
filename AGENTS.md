@@ -48,7 +48,7 @@ Then open e.g. `http://localhost:4002/wifi.html`. For the shared header/footer/s
 
 The manual **Release** workflow (Actions → Release → Run workflow) is the ship path — it creates the version tag + GitHub Release and deploys to the VPS in one run.
 
-The VPS docroot is `/home/misssponto-qr/htdocs/www.qr.misssponto.me.uk/` — a git checkout of this repo's `master` branch (nginx serves it directly, no app process, no build step). Deploys run through the Release workflow like the rest of the family: the shared deploy job SSHes in as `misssponto-qr`, fetches + resets the checkout, and that's it (no `scripts/deploy.sh` — nothing to build).
+The VPS docroot is `/home/misssponto-qr/htdocs/www.qr.misssponto.me.uk/` — a git checkout of this repo's `master` branch (nginx serves it directly, no app process, no build step). Deploys run through the Release workflow like the rest of the family: the shared deploy job SSHes in as `misssponto-qr`, fetches + resets the checkout, then runs `scripts/deploy.sh` — which only writes `js/buildInfo.js` (version + commit for the footer) from the latest `vX.Y.Z` tag. The file is generated per-deploy and gitignored.
 
 ### Manual deploy (fallback)
 
