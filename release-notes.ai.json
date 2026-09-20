@@ -30,7 +30,25 @@
       "details": [
         "The release process can now create release tags."
       ]
+    },
+    "ec4ec24c1e26e4b2e618a43d9463a15738ed493d": {
+      "title": "Adopt shared release-branch sync for CI",
+      "details": [
+        "CI now synchronizes work through a shared release branch"
+      ]
+    },
+    "1969592134cda671b2ff98534dda73234701a496": {
+      "title": "Disable shared deploy job; keep QR manual",
+      "details": [
+        "Shared deploy job was turned off while preserving manual SCP transfers for QR"
+      ]
+    },
+    "b520b53d47726931bafae29f58f405a6b457e3dd": {
+      "title": "Grant CI permissions for release job content access",
+      "details": [
+        "Fixed permissions so CI can write to contents and pull requests in the release job"
+      ]
     }
   },
-  "updatedAt": "2026-09-20T15:08:25.897Z"
+  "updatedAt": "2026-09-20T15:38:40.862Z"
 }
