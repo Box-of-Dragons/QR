@@ -44,6 +44,10 @@ npx serve -l 4002 .
 
 Then open e.g. `http://localhost:4002/wifi.html`. For the shared header/footer/styles to render locally, the StructuredChaos site must also be served on `http://localhost:4000`.
 
+## Pull Requests
+
+The manual **PR to dev** workflow (Actions → PR to dev → Run workflow) opens or updates a `branch → dev` PR with a conventional title derived from the commit log and the commit titles as the body. Tick the `merge` input to squash-merge in the same run — the landed commit is `<title> (#<pr>)` + commit titles. Shared machinery lives in `family-pr.yml` (see [docs/git-rules.md](../StructuredChaos/docs/git-rules.md)).
+
 ## Deploying
 
 The manual **Release** workflow (Actions → Release → Run workflow) is the ship path — it creates the version tag + GitHub Release and deploys to the VPS in one run.
