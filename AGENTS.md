@@ -15,6 +15,7 @@ The two generator pages (`generator.html`, `text-generator.html`) share code:
 - `css/gen.css` — shared `.gen-*` styles (sticker table, options form, sheet preview, margin guide, actions). Loaded after `css/site.css`.
 - `js/gen-shared.js` — `window.GenShared` helpers: `mmToPx`/`pxToMm` (300 DPI), `expandQueue` (count expansion), `overflowNote`, `positionMarginGuide`, `attachTsvPaste` (Excel/Sheets paste), `downloadCanvas`.
 - `js/sheet-pack.js` — `window.SheetPack` rectangle packing: `grid` (uniform cells), `shelf` (in-order rows), `maxRects` (best-fit). All take a queue of `{w, h}` items and return `{placements, overflow}` in margin-relative px.
+- `js/qr-sticker.js` / `js/qr-gen.js` — `generator.html` only: `window.QrSticker` single-sticker drawing (`makeQr`, `draw(ctx, opts)`), and the page logic (rows, localStorage state via the `OPTS` element map, presets, render).
 
 ## Page Shell
 
