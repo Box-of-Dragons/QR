@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "notes": {
+    "7eac3705f0d6ea1c172c022e9fc47006fceedad8": {
+      "title": "Initial QR novelty pages and sticker generators",
+      "details": []
+    },
+    "5f086d2a02e320bf2414c1bfb41ea9a4b12239ed": {
+      "title": "Manual release workflow added",
+      "details": []
+    },
+    "04db78e39316a2f68773d970f0a1e0566a762c5f": {
+      "title": "Docs: release workflow tags noted, deploy manual",
+      "details": []
+    },
+    "ef153385af7b910101209a88789071c5f497f351": {
+      "title": "Release branch protected; dev sync via release PR",
+      "details": []
+    },
+    "6fefb6ad035a932113c5827e18da81ba80bf95a1": {
+      "title": "Grant write permissions for contents to release job",
+      "details": []
+    },
+    "3b4c1bf4ea6c12c7d68a31a2ca4135a229688a07": {
+      "title": "Use shared release-branch sync in CI",
+      "details": []
+    },
+    "2e00c0cc21bf2264cd1cb282a0979942ead8865b": {
+      "title": "Disable shared deploy job; QR deploy remains manual scp",
+      "details": []
+    },
+    "f5470275692a7f93c17abf9d14c8d7448609c60c": {
+      "title": "Grant write permissions for contents and pull requests to release job",
+      "details": []
+    },
+    "66f56461ae152058f8b666d046ba22f04ad670a0": {
+      "title": "Enable VPS deploy; docroot now uses master checkout",
+      "details": []
+    },
+    "440266796d4130e2b5b86ab55c4645b99eb473aa": {
+      "title": "Add 418 teapot page",
+      "details": []
+    },
+    "1b6da5951b7a018814ac189960aab8d830a04d82": {
+      "title": "Add security check and support pages",
+      "details": []
+    },
+    "11afe1752caaf8e908585b0573471f4dbb0f99e5": {
+      "title": "Extract shared link list to js/footer-links.js",
+      "details": []
+    },
+    "a745b35175832172a8ce8d1c362bbfe1936c5154": {
+      "title": "Replace stub with landing page listing",
+      "details": []
+    },
+    "de2f044821f52aca136131af346004426865a3ec": {
+      "title": "Collapse multi-page scan chain into single code",
+      "details": []
+    },
+    "672ce4327a1688ad0034199d4334f5fba021579d": {
+      "title": "Write js/buildInfo.js during VPS deploy",
+      "details": []
+    },
+    "2c6a132c88008a748347b0eccb3a616c9a88b76b": {
+      "title": "Add sticker spacing, ScanNCut support, and preset options",
+      "details": []
+    },
+    "37ae41a2f9278b80d00ea4662ab5037f628a8fd3": {
+      "title": "Document qr-sticker.js and qr-gen.js",
+      "details": []
+    },
+    "a62379e43d52caee28bc62122ecb83f643be9219": {
+      "title": "Add manual PR to dev workflow",
+      "details": []
+    },
+    "767a7480551e1eaaf6ed95767c907a45edd2b911": {
+      "title": "Take PR source branch from dispatch ref",
+      "details": []
+    }
+  },
+  "updatedAt": "2026-09-20T20:17:30.620Z"
+}

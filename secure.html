@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Security Check — QR</title>
+    <meta name="description" content="Please confirm you are not a robot.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Open+Sans:wght@400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>(function(){var h=location.hostname;var l=h==='localhost'||h==='127.0.0.1'||h.indexOf('.ddev.site')!==-1;var b=(l?'http://localhost:4000':'https://misssponto.me.uk');document.write('<link rel="stylesheet" href="'+b+'/css/shared.css">');})();</script>
+    <link rel="stylesheet" href="/css/site.css">
+    <style>
+        .secure-page {
+            font-family: 'Courier New', Courier, monospace;
+            border: 2px solid var(--body);
+            padding: 40px;
+            max-width: 640px;
+            margin: 0 auto;
+            background: var(--tertiary);
+            text-align: center;
+        }
+        .secure-page header {
+            border-bottom: 2px solid var(--body);
+            padding-bottom: 16px;
+            margin-bottom: 32px;
+        }
+        .secure-page h2 {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 3em;
+            letter-spacing: 4px;
+            margin: 0;
+        }
+        .secure-page .secure-status {
+            font-size: 0.85em;
+            margin-top: 8px;
+        }
+        .captcha-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            border: 2px solid var(--body);
+            background: var(--secondary);
+            padding: 16px 24px;
+            margin: 24px auto;
+            max-width: 320px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .captcha-box input[type="checkbox"] {
+            width: 28px;
+            height: 28px;
+            margin: 0;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+        .captcha-box input[type="checkbox"]:disabled {
+            cursor: default;
+        }
+        .captcha-box .captcha-label {
+            font-weight: 700;
+        }
+        .captcha-box .captcha-spin {
+            width: 18px;
+            height: 18px;
+            border: 3px solid var(--body);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: captcha-spin 0.7s linear infinite;
+        }
+        .captcha-box .captcha-spin[hidden] {
+            display: none;
+        }
+        @keyframes captcha-spin {
+            to { transform: rotate(360deg); }
+        }
+        .secure-page .secure-verdict {
+            margin-top: 16px;
+            font-weight: 700;
+        }
+        .secure-page .secure-verdict[hidden] {
+            display: none;
+        }
+        .secure-page .secure-denied {
+            font-size: 0.85em;
+        }
+        .secure-page footer {
+            border-top: 1px solid var(--body);
+            margin-top: 32px;
+            padding-top: 12px;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+<div id="global-bar"></div>
+
+<main class="page-main">
+    <div class="shell">
+        <div class="container">
+            <div class="panel panel--padded">
+                <div class="secure-page">
+                    <header>
+                        <h2>SECURITY CHECK</h2>
+                        <div class="secure-status">Verification required to continue</div>
+                    </header>
+                    <p>Please confirm you are not a robot.</p>
+                    <label class="captcha-box" for="robot-check">
+                        <input type="checkbox" id="robot-check">
+                        <span class="captcha-label">I'm not a robot</span>
+                        <span class="captcha-spin" id="captcha-spin" hidden></span>
+                    </label>
+                    <p class="secure-verdict" id="verdict" hidden>That's exactly what a robot would do.<br>
+                    <span class="secure-denied">Access denied.</span></p>
+                    <footer>CaptchaZero &nbsp;&mdash;&nbsp; powered by suspicion</footer>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="/js/footer-links.js"></script>
+<div id="site-footer"></div>
+
+<script>
+document.getElementById('robot-check').addEventListener('change', function () {
+    if (!this.checked) return;
+    this.disabled = true;
+    var spin = document.getElementById('captcha-spin');
+    spin.hidden = false;
+    setTimeout(function () {
+        spin.hidden = true;
+        document.getElementById('verdict').hidden = false;
+    }, 900);
+});
+</script>
+
+<script>
+(function () {
+    var host = location.hostname;
+    var isLocal = host === 'localhost' || host === '127.0.0.1' || host.indexOf('.ddev.site') !== -1;
+    var base = (isLocal ? 'http://localhost:4000' : 'https://misssponto.me.uk') + '/js/';
+    ['global-bar.js', 'site-footer.js'].forEach(function (file) {
+        var s = document.createElement('script');
+        s.src = base + file;
+        s.defer = true;
+        document.head.appendChild(s);
+    });
+})();
+</script>
+</body>
+</html>

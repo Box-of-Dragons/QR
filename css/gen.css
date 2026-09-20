@@ -35,9 +35,22 @@
     text-transform: uppercase; color: var(--body);
 }
 .gen-group:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+.gen-form .caption { margin: 8px 0 0; }
+.gen-presets {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 10px;
+}
+.gen-presets .chip {
+    border: 0; cursor: pointer;
+}
 .gen-form select {
     width: 100%; padding: 8px 10px; border: 1px solid var(--border);
     border-radius: 4px; font: inherit; box-sizing: border-box;
+}
+.gen-form input[type="number"] {
+    width: 100%; padding: 8px 10px; border: 1px solid var(--border);
+    border-radius: 4px; font: inherit; box-sizing: border-box;
+    margin-top: 6px;
 }
 .gen-form input[type="color"] {
     width: 100%; height: 34px; padding: 2px;
@@ -47,11 +60,11 @@
 .gen-preview { text-align: center; }
 .gen-sheet-wrap {
     position: relative; display: inline-block; line-height: 0;
-    border: 1px dashed var(--border);
+    border: 1px dashed #b0a693;
 }
 .gen-sheet-wrap canvas { max-width: 100%; height: auto; display: block; }
 .gen-margin-guide {
-    position: absolute; border: 2px dashed #b0a693;
+    position: absolute; border: 1px dashed var(--border);
     box-sizing: border-box; pointer-events: none; display: none;
 }
 .gen-sheet-info { text-align: center; margin-top: 10px; }
