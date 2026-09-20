@@ -47,7 +47,7 @@ Then open e.g. `http://localhost:4002/wifi.html`. For the shared header/footer/s
 
 ## Pull Requests
 
-The manual **PR to dev** workflow (Actions → PR to dev → Run workflow) opens or updates a `branch → dev` PR with a conventional title derived from the commit log and the commit titles as the body. Tick the `merge` input to squash-merge in the same run — the landed commit is `<title> (#<pr>)` + commit titles. Shared machinery lives in `family-pr.yml` (see [docs/git-rules.md](../StructuredChaos/docs/git-rules.md)).
+The manual **PR to dev** workflow (Actions → PR to dev → Run workflow → "Use workflow from" the branch to PR) opens or updates a `branch → dev` PR with a conventional title derived from the commit log and the commit titles as the body. Tick the `merge` input to squash-merge in the same run — the landed commit is `<title> (#<pr>)` + commit titles. Shared machinery lives in `family-pr.yml` (see [docs/git-rules.md](../StructuredChaos/docs/git-rules.md)).
 
 ## Deploying
 

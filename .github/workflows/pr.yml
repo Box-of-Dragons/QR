@@ -1,17 +1,13 @@
 name: PR to dev
 
-# Manual — Actions → PR to dev → Run workflow.
-# Opens (or updates) a PR from the given branch into dev with a conventional
-# title and the commit titles as the body. Tick `merge` to squash-merge it in
-# the same run with that title/body as the commit message.
+# Manual — Actions → PR to dev → Run workflow → "Use workflow from" the
+# branch you want to PR; that branch is the source, the target is dev.
+# Opens (or updates) the PR with a conventional title and the commit titles
+# as the body. Tick `merge` to squash-merge it in the same run.
 
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: Source branch to PR into dev
-        required: true
-        type: string
       merge:
         description: Squash-merge the PR immediately after opening it
         type: boolean
@@ -24,7 +20,7 @@ jobs:
       contents: write
       pull-requests: write
     with:
-      source-branch: ${{ inputs.branch }}
+      source-branch: ${{ github.ref_name }}
       base-branch: dev
       merge: ${{ inputs.merge }}
     secrets: inherit
