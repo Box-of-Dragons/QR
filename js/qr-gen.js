@@ -60,7 +60,8 @@
 
     var LS_KEY = 'qr-gen-v1';
 
-    function saveState() {
+    // {rows, opts} — the shape persisted to localStorage and to saved sets.
+    function currentState() {
         var rows = [];
         rowsEl.querySelectorAll('tr').forEach(function (tr) {
             rows.push({
@@ -71,8 +72,21 @@
         });
         var opts = {};
         Object.keys(OPTS).forEach(function (k) { opts[k] = OPTS[k].value; });
+        return { rows: rows, opts: opts };
+    }
+
+    function applyState(st) {
+        if (!st) return;
+        rowsEl.innerHTML = '';
+        if (st.opts) Object.keys(st.opts).forEach(function (k) {
+            if (OPTS[k] && st.opts[k] != null) OPTS[k].value = st.opts[k];
+        });
+        (st.rows || []).forEach(function (r) { addRow(r.url, r.text, r.count); });
+    }
+
+    function saveState() {
         try {
-            localStorage.setItem(LS_KEY, JSON.stringify({ rows: rows, opts: opts }));
+            localStorage.setItem(LS_KEY, JSON.stringify(currentState()));
         } catch (e) {}
     }
 
@@ -80,10 +94,7 @@
         var st;
         try { st = JSON.parse(localStorage.getItem(LS_KEY)); } catch (e) {}
         if (!st) return false;
-        if (st.opts) Object.keys(st.opts).forEach(function (k) {
-            if (OPTS[k] && st.opts[k] != null) OPTS[k].value = st.opts[k];
-        });
-        (st.rows || []).forEach(function (r) { addRow(r.url, r.text, r.count); });
+        applyState(st);
         return true;
     }
 
@@ -263,6 +274,18 @@
             : 'qr-sheet-' + OPTS.page.value + 'mm-' + stickerWidthMm() + 'mm-stickers.png');
         hideCutLines = false;
         render();
+    });
+
+    QrStore.mount({
+        type: 'qr',
+        storageKey: 'qr-gen-sets',
+        mountEl: document.getElementById('gen-store'),
+        getState: currentState,
+        applyState: function (st) {
+            applyState(st);
+            syncCustomInputs();
+            render();
+        }
     });
 
     if (!loadState()) addRow('https://qr.misssponto.me.uk/scan.html', 'SCAN ME', 1);
