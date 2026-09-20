@@ -2,7 +2,7 @@ name: Release
 
 # Releases are always manual — Actions → Release → Run workflow.
 # QR deploys by manual scp (the VPS docroot is not a git repo), so this
-# workflow only plans/tags/releases and syncs dev into protected master.
+# workflow only plans/syncs/tags/releases.
 # All release policy lives in the shared workflow (StructuredChaos docs/git-rules.md).
 
 on:
@@ -11,35 +11,6 @@ on:
 jobs:
   release:
     uses: Box-of-Dragons/StructuredChaos/.github/workflows/family-release.yml@master
-    permissions:
-      contents: write
+    with:
+      release-branch: master
     secrets: inherit
-
-  # dev work reaches protected master only through a PR merge.
-  sync:
-    name: Sync release branch
-    needs: release
-    if: always() && github.ref_name == 'dev' && !failure() && !cancelled()
-    permissions:
-      contents: write
-      pull-requests: write
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Merge dev into master via pull request
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git fetch origin master dev
-          if [ "$(git rev-list --count origin/master..origin/dev)" -eq 0 ]; then
-            echo "master already contains dev."
-            exit 0
-          fi
-          gh pr create --base master --head dev \
-            --title "chore(release): merge dev into master" \
-            --body "Automated release sync." || true
-          gh pr merge --merge dev || { sleep 5; gh pr merge --merge dev; }
