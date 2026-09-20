@@ -257,6 +257,14 @@ window.QrStore = (function () {
             fileInput.click();
         });
 
+        // Sign-in happens in a separate tab — re-check the session when this
+        // tab regains focus so the panel picks up a fresh login.
+        function onVisible() {
+            if (document.visibilityState === 'visible' && !signedIn) refresh();
+        }
+        window.addEventListener('focus', onVisible);
+        document.addEventListener('visibilitychange', onVisible);
+
         fileInput.addEventListener('change', function () {
             var file = fileInput.files && fileInput.files[0];
             fileInput.value = '';
