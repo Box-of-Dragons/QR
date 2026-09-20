@@ -1,0 +1,30 @@
+/* site.css — qr.misssponto.me.uk site-specific styles
+ *
+ * Loads AFTER css/shared.css from the root Structured Chaos site.
+ * Contains only qr-specific overrides — all tokens, base styles, and
+ * shared components (global bar, panels, footer) live in shared.css.
+ */
+
+/* No page subheader on these pages — restore the top gap under the
+   global bar that .page-subheader used to provide. */
+.page-main {
+    padding-top: 32px;
+}
+
+/* Pages that do have a subheader (e.g. generator) already get their
+   top gap from it — don't double up. */
+.page-subheader + .page-main {
+    padding-top: 0;
+}
+
+/* Scan pages — centered QR code trap chain */
+.scan-page {
+    text-align: center;
+}
+
+.scan-page img {
+    display: block;
+    width: 300px;
+    max-width: 100%;
+    margin: 12px auto 8px;
+}

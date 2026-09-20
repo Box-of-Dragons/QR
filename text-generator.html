@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Text Sticker Generator — QR</title>
+    <meta name="description" content="Generate printable die-cut style text sticker sheets.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Anton&family=Bebas+Neue&family=Luckiest+Guy&family=Titan+One&family=Dancing+Script:wght@700&family=Open+Sans:wght@400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>(function(){var h=location.hostname;var l=h==='localhost'||h==='127.0.0.1'||h.indexOf('.ddev.site')!==-1;var b=(l?'http://localhost:4000':'https://misssponto.me.uk');document.write('<link rel="stylesheet" href="'+b+'/css/shared.css">');})();</script>
+    <link rel="stylesheet" href="/css/site.css">
+    <link rel="stylesheet" href="/css/gen.css">
+    <style>
+        .gen-form input[type="color"] {
+            width: 100%; height: 34px; padding: 2px;
+            border: 1px solid var(--border); border-radius: 4px;
+            background: var(--secondary); box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+<div id="global-bar"></div>
+
+<section class="page-subheader">
+    <div class="shell">
+        <div class="page-subheader-inner">
+            <h1>Text Sticker Generator</h1>
+        </div>
+    </div>
+</section>
+
+<main class="page-main">
+    <div class="shell">
+        <div class="page-layout">
+            <div class="content-main">
+                <div class="container">
+                    <div class="panel panel--padded">
+                        <h3>Stickers</h3>
+                        <table class="gen-table">
+                            <thead><tr><th>Text</th><th>Count</th><th></th></tr></thead>
+                            <tbody id="gen-rows"></tbody>
+                        </table>
+                        <button class="gen-add" id="gen-add" type="button">+ Add row</button>
+                        <p class="caption">Paste straight from Excel/Sheets — tab-separated cells fill the grid. Enter for a line break.</p>
+                    </div>
+                    <div class="panel panel--padded">
+                        <h3>Sheet</h3>
+                        <div class="gen-preview">
+                            <div class="gen-sheet-wrap">
+                                <canvas id="gen-sheet"></canvas>
+                                <div class="gen-margin-guide" id="gen-margin-guide"></div>
+                            </div>
+                        </div>
+                        <p class="gen-sheet-info caption" id="gen-sheet-info"></p>
+                        <div class="gen-actions"><button id="gen-download" type="button">Download PNG (300 DPI)</button></div>
+                    </div>
+                </div>
+            </div>
+            <aside class="sidebar">
+                <div class="container">
+                    <div class="panel panel--padded">
+                        <h3>Options</h3>
+                        <div class="gen-form">
+                            <div class="gen-group">Sticker</div>
+                            <label for="gen-font">Font</label>
+                            <select id="gen-font">
+                                <option value="Archivo Black" selected>Archivo Black</option>
+                                <option value="Anton">Anton</option>
+                                <option value="Bebas Neue">Bebas Neue</option>
+                                <option value="Luckiest Guy">Luckiest Guy</option>
+                                <option value="Titan One">Titan One</option>
+                            </select>
+
+                            <label for="gen-textsize">Text size</label>
+                            <select id="gen-textsize">
+                                <option value="5">5 mm</option>
+                                <option value="8">8 mm</option>
+                                <option value="10">10 mm</option>
+                                <option value="15" selected>15 mm</option>
+                                <option value="20">20 mm</option>
+                                <option value="25">25 mm</option>
+                                <option value="30">30 mm</option>
+                            </select>
+
+                            <label for="gen-textstyle">Text style</label>
+                            <select id="gen-textstyle">
+                                <option value="outline" selected>Outlined</option>
+                                <option value="filled">Filled</option>
+                            </select>
+
+                            <label for="gen-textcolour">Text colour</label>
+                            <input type="color" id="gen-textcolour" value="#ffffff">
+
+                            <label for="gen-vinyl">Sticker colour</label>
+                            <input type="color" id="gen-vinyl" value="#ffffff">
+
+                            <label for="gen-border">Sticker border</label>
+                            <select id="gen-border">
+                                <option value="0">None</option>
+                                <option value="0.5">0.5 mm</option>
+                                <option value="1">1 mm</option>
+                                <option value="1.5">1.5 mm</option>
+                                <option value="2">2 mm</option>
+                                <option value="2.5">2.5 mm</option>
+                                <option value="3">3 mm</option>
+                                <option value="4" selected>4 mm</option>
+                                <option value="5">5 mm</option>
+                                <option value="6">6 mm</option>
+                                <option value="8">8 mm</option>
+                            </select>
+
+                            <label for="gen-rowgap">Row spacing</label>
+                            <select id="gen-rowgap">
+                                <option value="-2">-2 mm</option>
+                                <option value="-1">-1 mm</option>
+                                <option value="-0.5">-0.5 mm</option>
+                                <option value="0">None</option>
+                                <option value="1" selected>1 mm</option>
+                                <option value="2">2 mm</option>
+                                <option value="4">4 mm</option>
+                            </select>
+
+                            <label for="gen-letterspace">Letter spacing</label>
+                            <select id="gen-letterspace">
+                                <option value="-2">-2 mm</option>
+                                <option value="-1">-1 mm</option>
+                                <option value="-0.5">-0.5 mm</option>
+                                <option value="0" selected>None</option>
+                                <option value="0.5">0.5 mm</option>
+                                <option value="1">1 mm</option>
+                                <option value="2">2 mm</option>
+                            </select>
+
+                            <div class="gen-group">Sheet</div>
+                            <label for="gen-page">Page size</label>
+                            <select id="gen-page">
+                                <option value="single">Single sticker</option>
+                                <option value="210x297" selected>A4 (210 × 297 mm)</option>
+                                <option value="148x210">A5 (148 × 210 mm)</option>
+                                <option value="216x279">Letter (216 × 279 mm)</option>
+                            </select>
+
+                            <label for="gen-margin">Page margin</label>
+                            <select id="gen-margin">
+                                <option value="5">5 mm</option>
+                                <option value="10" selected>10 mm</option>
+                                <option value="15">15 mm</option>
+                                <option value="20">20 mm</option>
+                            </select>
+
+                            <label for="gen-layout">Layout</label>
+                            <select id="gen-layout">
+                                <option value="grid">Uniform grid</option>
+                                <option value="shelf" selected>Shelf packed</option>
+                                <option value="packed">Best-fit packed</option>
+                            </select>
+
+                            <label for="gen-gap">Sticker spacing</label>
+                            <select id="gen-gap">
+                                <option value="0.5">0.5 mm</option>
+                                <option value="1">1 mm</option>
+                                <option value="2">2 mm</option>
+                                <option value="5" selected>5 mm</option>
+                                <option value="10">10 mm</option>
+                            </select>
+
+                            <label for="gen-fill">Empty slots</label>
+                            <select id="gen-fill">
+                                <option value="blank" selected>Leave blank</option>
+                                <option value="repeat">Repeat stickers to fill</option>
+                            </select>
+
+                            <label for="gen-cutlines">Cut lines</label>
+                            <select id="gen-cutlines">
+                                <option value="show" selected>Show</option>
+                                <option value="hide">Hide</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</main>
+
+<script>window.SITE_FOOTER = {
+    label: 'QR',
+    links: [
+        { label: 'Home', href: '/' },
+        { label: 'Wi-Fi', href: '/wifi.html' },
+        { label: 'Device Manual', href: '/manual.html' },
+        { label: 'Scan', href: '/scan.html' },
+        { label: 'Generator', href: '/generator.html' },
+        { label: 'Text Generator', href: '/text-generator.html' }
+    ]
+};</script>
+<div id="site-footer"></div>
+
+<script src="/js/sheet-pack.js"></script>
+<script src="/js/gen-shared.js"></script>
+<script>
+(function () {
+    var host = location.hostname;
+    var isLocal = host === 'localhost' || host === '127.0.0.1' || host.indexOf('.ddev.site') !== -1;
+    var base = (isLocal ? 'http://localhost:4000' : 'https://misssponto.me.uk') + '/js/';
+    ['global-bar.js', 'site-footer.js'].forEach(function (file) {
+        var s = document.createElement('script');
+        s.src = base + file;
+        s.defer = true;
+        document.head.appendChild(s);
+    });
+})();
+</script>
+<script src="/js/text-sticker.js"></script>
+<script src="/js/text-gen.js"></script>
+</body>
+</html>

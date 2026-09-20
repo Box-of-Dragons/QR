@@ -1,0 +1,63 @@
+/* Shared styles for the generator pages (generator.html, text-generator.html).
+   shared.css gives all th/td a border + 0.7em padding — strip that
+   back so the grid reads as a form, not a data table. */
+.gen-table { margin-bottom: 8px; }
+.gen-table th, .gen-table td {
+    border: 0; padding: 0 6px 6px 0; vertical-align: top;
+}
+.gen-table th { font-size: 0.85em; font-weight: 600; padding-bottom: 4px; }
+.gen-table th:last-child, .gen-table td:last-child { padding-right: 0; }
+.gen-table .gen-count { width: 72px; }
+.gen-table .gen-del-cell { width: 32px; }
+.gen-table input, .gen-table textarea {
+    width: 100%; padding: 6px 8px; border: 1px solid var(--border);
+    border-radius: 4px; font: inherit; font-size: 0.9em; box-sizing: border-box;
+}
+.gen-table textarea { resize: none; overflow: hidden; }
+.gen-table .gen-del {
+    width: 28px; height: 28px; padding: 0; border: 0; background: none;
+    cursor: pointer; color: var(--body); font-size: 1.2em; line-height: 1;
+    letter-spacing: 0; text-transform: none;
+}
+.gen-size { display: block; font-size: 0.75em; margin-top: 2px; min-height: 1em; }
+.gen-add {
+    display: inline-block; width: auto; padding: 6px 14px;
+    font-size: 0.85em; cursor: pointer;
+    background: var(--secondary); color: var(--body);
+    border: 1px solid var(--border); border-radius: 4px;
+}
+.gen-form label { display: block; font-weight: 600; margin: 14px 0 4px; }
+.gen-form label:first-of-type { margin-top: 0; }
+.gen-group {
+    margin: 18px 0 0; padding-top: 14px;
+    border-top: 1px solid var(--border);
+    font-size: 0.8em; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--body);
+}
+.gen-group:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+.gen-form select {
+    width: 100%; padding: 8px 10px; border: 1px solid var(--border);
+    border-radius: 4px; font: inherit; box-sizing: border-box;
+}
+.gen-form input[type="color"] {
+    width: 100%; height: 34px; padding: 2px;
+    border: 1px solid var(--border); border-radius: 4px;
+    background: var(--secondary); box-sizing: border-box;
+}
+.gen-preview { text-align: center; }
+.gen-sheet-wrap {
+    position: relative; display: inline-block; line-height: 0;
+    border: 1px dashed var(--border);
+}
+.gen-sheet-wrap canvas { max-width: 100%; height: auto; display: block; }
+.gen-margin-guide {
+    position: absolute; border: 2px dashed #b0a693;
+    box-sizing: border-box; pointer-events: none; display: none;
+}
+.gen-sheet-info { text-align: center; margin-top: 10px; }
+.gen-actions { margin-top: 16px; text-align: center; }
+.gen-actions button {
+    padding: 10px 24px; font: inherit; font-weight: 600; cursor: pointer;
+    background: var(--primary); color: var(--secondary);
+    border: 0; border-radius: 4px;
+}
