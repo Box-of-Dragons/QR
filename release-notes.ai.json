@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "notes": {
+    "7eac3705f0d6ea1c172c022e9fc47006fceedad8": {
+      "title": "New novelty pages and sticker generators",
+      "details": [
+        "QR novelty pages and sticker generators are now available."
+      ]
+    },
+    "5f086d2a02e320bf2414c1bfb41ea9a4b12239ed": {
+      "title": "Manual release workflow added",
+      "details": [
+        "Releases can now be started manually and tagged automatically."
+      ]
+    },
+    "04db78e39316a2f68773d970f0a1e0566a762c5f": {
+      "title": "Deployment still requires manual upload",
+      "details": [
+        "Release tags are created automatically, but deployment remains manual."
+      ]
+    },
+    "ef153385af7b910101209a88789071c5f497f351": {
+      "title": "Release changes use pull requests",
+      "details": [
+        "The release branch is protected, and development changes are synced through release pull requests."
+      ]
+    },
+    "6fefb6ad035a932113c5827e18da81ba80bf95a1": {
+      "title": "Release automation can create tags",
+      "details": [
+        "The release process can now create release tags."
+      ]
+    }
+  },
+  "updatedAt": "2026-09-20T15:08:25.897Z"
+}
