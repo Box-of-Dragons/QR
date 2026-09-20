@@ -48,7 +48,14 @@
       "details": [
         "Fixed permissions so CI can write to contents and pull requests in the release job"
       ]
+    },
+    "a029fd964f690f9ec92bd50cfd4e6fcf8d7af713": {
+      "title": "Enable VPS deployment with updated docroot",
+      "details": [
+        "docroot is now on the master branch",
+        "VPS deployments have been enabled"
+      ]
     }
   },
-  "updatedAt": "2026-09-20T15:38:40.862Z"
+  "updatedAt": "2026-09-20T15:46:36.149Z"
 }
