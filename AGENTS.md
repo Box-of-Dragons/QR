@@ -24,6 +24,7 @@ Pages use the Structured Chaos shared chrome, loaded from the root site (`http:/
 - `css/site.css` — qr-specific overrides, loaded after `shared.css` (currently just restores the `.page-main` top gap since these pages have no subheader)
 - `js/global-bar.js` — shared site switcher bar (`<div id="global-bar"></div>`)
 - `js/site-footer.js` — footer with page links (`window.SITE_FOOTER.links`)
+- `js/footer-links.js` — QR-local single source of truth for `window.SITE_FOOTER` (the footer page-link list); loaded by every page via `<script src="/js/footer-links.js"></script>` before the `site-footer.js` loader
 
 Deliberate deviations from the family shell:
 
@@ -44,6 +45,8 @@ npx serve -l 4002 .
 Then open e.g. `http://localhost:4002/wifi.html`. For the shared header/footer/styles to render locally, the StructuredChaos site must also be served on `http://localhost:4000`.
 
 ## Deploying
+
+The manual **Release** workflow (Actions → Release → Run workflow) creates the version tag + GitHub Release, but deploying files is still manual `scp` — the VPS docroot is not a git repo, so the shared `family-deploy` job doesn't apply here.
 
 The VPS docroot is `/home/misssponto-qr/htdocs/www.qr.misssponto.me.uk/` (nginx serves it directly, no app process). Deploy by copying files and fixing ownership:
 
