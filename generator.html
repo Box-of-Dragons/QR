@@ -63,7 +63,9 @@
                                 <option value="38" selected>38 mm</option>
                                 <option value="50">50 mm</option>
                                 <option value="75">75 mm</option>
+                                <option value="custom">Custom…</option>
                             </select>
+                            <input type="number" id="gen-size-custom" min="10" max="250" step="0.5" value="38" hidden>
 
                             <label for="gen-height">Sticker height</label>
                             <select id="gen-height">
@@ -73,14 +75,28 @@
                                 <option value="50">50 mm</option>
                                 <option value="63">63 mm</option>
                                 <option value="75">75 mm</option>
+                                <option value="custom">Custom…</option>
                             </select>
+                            <input type="number" id="gen-height-custom" min="10" max="300" step="0.5" value="50" hidden>
 
                             <label for="gen-border">Border</label>
                             <select id="gen-border">
                                 <option value="0">None</option>
-                                <option value="1" selected>Thin (1 mm)</option>
-                                <option value="2">Thick (2 mm)</option>
+                                <option value="0.5">0.5 mm</option>
+                                <option value="1" selected>1 mm</option>
+                                <option value="1.5">1.5 mm</option>
                             </select>
+
+                            <label for="gen-padding">Padding</label>
+                            <select id="gen-padding">
+                                <option value="auto" selected>Auto</option>
+                                <option value="0">None</option>
+                                <option value="1">1 mm</option>
+                                <option value="2">2 mm</option>
+                                <option value="3">3 mm</option>
+                                <option value="5">5 mm</option>
+                            </select>
+                            <p class="caption">Auto adds the recommended 4-module quiet zone for reliable scanning.</p>
 
                             <div class="gen-group">Sheet</div>
                             <label for="gen-page">Page size</label>
@@ -94,9 +110,11 @@
                             <label for="gen-margin">Page margin</label>
                             <select id="gen-margin">
                                 <option value="5">5 mm</option>
-                                <option value="10" selected>10 mm</option>
-                                <option value="15">15 mm</option>
-                                <option value="20">20 mm</option>
+                                <option value="6" selected>6 mm</option>
+                                <option value="7">7 mm</option>
+                                <option value="8">8 mm</option>
+                                <option value="9">9 mm</option>
+                                <option value="10">10 mm</option>
                             </select>
 
                             <label for="gen-gap">Sticker spacing</label>
@@ -109,17 +127,63 @@
 
                             <label for="gen-textgap">Caption gap</label>
                             <select id="gen-textgap">
+                                <option value="auto" selected>Auto</option>
                                 <option value="0">None</option>
-                                <option value="0.5" selected>0.5 mm</option>
+                                <option value="0.5">0.5 mm</option>
                                 <option value="1">1 mm</option>
+                                <option value="1.5">1.5 mm</option>
                                 <option value="2">2 mm</option>
+                                <option value="3">3 mm</option>
+                                <option value="4">4 mm</option>
+                                <option value="5">5 mm</option>
+                                <option value="6">6 mm</option>
                             </select>
+                            <p class="caption">Gap between the QR and the caption. Auto matches the padding.</p>
+
+                            <label for="gen-bottompad">Bottom padding</label>
+                            <select id="gen-bottompad">
+                                <option value="auto" selected>Auto</option>
+                                <option value="0">None</option>
+                                <option value="0.5">0.5 mm</option>
+                                <option value="1">1 mm</option>
+                                <option value="1.5">1.5 mm</option>
+                                <option value="2">2 mm</option>
+                                <option value="3">3 mm</option>
+                                <option value="4">4 mm</option>
+                                <option value="5">5 mm</option>
+                                <option value="6">6 mm</option>
+                            </select>
+                            <p class="caption">Gap under the caption. Auto takes the remaining space.</p>
 
                             <label for="gen-fill">Empty slots</label>
                             <select id="gen-fill">
                                 <option value="blank" selected>Leave blank</option>
                                 <option value="repeat">Repeat stickers to fill</option>
                             </select>
+
+                            <div class="gen-group">ScanNCut</div>
+                            <label for="gen-detect">Detection</label>
+                            <select id="gen-detect">
+                                <option value="line" selected>Line</option>
+                                <option value="outline">Outline</option>
+                            </select>
+
+                            <label for="gen-offset">Offset</label>
+                            <select id="gen-offset">
+                                <option value="-2">-2 mm</option>
+                                <option value="-1.5">-1.5 mm</option>
+                                <option value="-1">-1 mm</option>
+                                <option value="-0.5">-0.5 mm</option>
+                                <option value="0" selected>None</option>
+                                <option value="0.5">+0.5 mm</option>
+                                <option value="1">+1 mm</option>
+                                <option value="1.5">+1.5 mm</option>
+                                <option value="2">+2 mm</option>
+                            </select>
+                            <p class="caption">The ScanNCut can offset its cut line after scan detection. This option just visualises where the cutter will cut the media.</p>
+
+                            <div class="gen-group">Presets</div>
+                            <div class="gen-presets" id="gen-presets"></div>
                         </div>
                     </div>
                 </div>
@@ -146,232 +210,8 @@
     });
 })();
 </script>
-<script>
-(function () {
-    var mmToPx = GenShared.mmToPx;
-    var TEXT_MM = 6, PAD_MM = 2;
-    var COLS = ['gen-url', 'gen-text', 'gen-count'];
-    var rowsEl = document.getElementById('gen-rows');
-    var sizeEl = document.getElementById('gen-size');
-    var heightEl = document.getElementById('gen-height');
-    var borderEl = document.getElementById('gen-border');
-    var pageEl = document.getElementById('gen-page');
-    var marginEl = document.getElementById('gen-margin');
-    var gapEl = document.getElementById('gen-gap');
-    var textGapEl = document.getElementById('gen-textgap');
-    var fillEl = document.getElementById('gen-fill');
-    var sheetCanvas = document.getElementById('gen-sheet');
-    var guideEl = document.getElementById('gen-margin-guide');
-    var infoEl = document.getElementById('gen-sheet-info');
+<script src="/js/qr-sticker.js"></script>
+<script src="/js/qr-gen.js"></script>
 
-    function addRow(url, text, count) {
-        var tr = document.createElement('tr');
-        tr.innerHTML = '<td><input type="text" class="gen-url" placeholder="https://…"></td>' +
-                       '<td><input type="text" class="gen-text" placeholder="Caption"></td>' +
-                       '<td class="gen-count"><input type="number" class="gen-count" min="1" value="1"></td>' +
-                       '<td class="gen-del-cell"><button class="gen-del" type="button" title="Remove row">×</button></td>';
-        tr.querySelector('.gen-url').value = url || '';
-        tr.querySelector('.gen-text').value = text || '';
-        tr.querySelector('input.gen-count').value = count || 1;
-        tr.querySelector('.gen-del').addEventListener('click', function () { tr.remove(); render(); });
-        tr.querySelectorAll('input').forEach(function (inp) { inp.addEventListener('input', render); });
-        rowsEl.appendChild(tr);
-        return tr;
-    }
-
-    function getStickers() {
-        var out = [];
-        rowsEl.querySelectorAll('tr').forEach(function (tr) {
-            var url = tr.querySelector('.gen-url').value.trim();
-            var text = tr.querySelector('.gen-text').value.trim();
-            var count = Math.max(1, parseInt(tr.querySelector('input.gen-count').value, 10) || 1);
-            if (url) out.push({ url: url, text: text, count: count });
-        });
-        return out;
-    }
-
-    var LS_KEY = 'qr-gen-v1';
-
-    function saveState() {
-        var rows = [];
-        rowsEl.querySelectorAll('tr').forEach(function (tr) {
-            rows.push({
-                url: tr.querySelector('.gen-url').value,
-                text: tr.querySelector('.gen-text').value,
-                count: tr.querySelector('input.gen-count').value
-            });
-        });
-        try {
-            localStorage.setItem(LS_KEY, JSON.stringify({
-                rows: rows,
-                opts: {
-                    size: sizeEl.value, height: heightEl.value, border: borderEl.value,
-                    page: pageEl.value, margin: marginEl.value, gap: gapEl.value,
-                    textgap: textGapEl.value, fill: fillEl.value
-                }
-            }));
-        } catch (e) {}
-    }
-
-    function loadState() {
-        var st;
-        try { st = JSON.parse(localStorage.getItem(LS_KEY)); } catch (e) {}
-        if (!st) return false;
-        var map = {
-            size: sizeEl, height: heightEl, border: borderEl,
-            page: pageEl, margin: marginEl, gap: gapEl,
-            textgap: textGapEl, fill: fillEl
-        };
-        if (st.opts) Object.keys(st.opts).forEach(function (k) {
-            if (map[k] && st.opts[k] != null) map[k].value = st.opts[k];
-        });
-        (st.rows || []).forEach(function (r) { addRow(r.url, r.text, r.count); });
-        return true;
-    }
-
-    // Excel/Sheets paste: TSV fills the grid starting at the focused cell
-    GenShared.attachTsvPaste(rowsEl, COLS, addRow, render);
-
-    document.getElementById('gen-add').addEventListener('click', function () { addRow().querySelector('.gen-url').focus(); });
-
-    // Draws one sticker at (x, y). w/h in px. qr is a made qrcode-generator object.
-    // Layout: border | pad | QR square (centered in space above text) | textGap | text | pad | border
-    function drawSticker(ctx, x, y, w, h, borderPx, padPx, textGapPx, textPx, text, qr) {
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(x, y, w, h);
-
-        if (borderPx > 0) {
-            ctx.strokeStyle = '#000';
-            ctx.lineWidth = borderPx;
-            ctx.strokeRect(x + borderPx / 2, y + borderPx / 2, w - borderPx, h - borderPx);
-        }
-
-        var innerX = x + borderPx + padPx;
-        var innerY = y + borderPx + padPx;
-        var innerW = w - 2 * (borderPx + padPx);
-        var innerH = h - 2 * (borderPx + padPx);
-
-        // Text strip anchors to the bottom of the inner area
-        var textTop = innerY + innerH - textPx;
-        // QR gets the inner area above the text strip minus the gap
-        var qrRegionH = textPx > 0 ? (textTop - textGapPx - innerY) : innerH;
-        var qrArea = Math.min(innerW, qrRegionH);
-
-        var count = qr.getModuleCount();
-        var quiet = 4;
-        var cell = Math.max(1, Math.floor(qrArea / (count + quiet * 2)));
-        var qrActual = cell * (count + quiet * 2);
-        var qrOffX = innerX + Math.floor((innerW - qrActual) / 2);
-        var qrOffY = innerY + Math.floor((qrRegionH - qrActual) / 2);
-        ctx.fillStyle = '#000';
-        for (var r = 0; r < count; r++) {
-            for (var c = 0; c < count; c++) {
-                if (qr.isDark(r, c)) {
-                    ctx.fillRect(qrOffX + (c + quiet) * cell, qrOffY + (r + quiet) * cell, cell, cell);
-                }
-            }
-        }
-
-        if (textPx > 0) {
-            ctx.fillStyle = '#000';
-            ctx.font = '600 ' + Math.round(textPx * 0.55) + 'px "Open Sans", sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(text, x + w / 2, textTop + textPx / 2, innerW);
-        }
-    }
-
-    function makeQr(url) {
-        var qr = qrcode(0, 'M');
-        qr.addData(url);
-        qr.make();
-        return qr;
-    }
-
-    function render() {
-        var stickers = getStickers();
-        var sizeMm = parseInt(sizeEl.value, 10);
-        var borderMm = parseInt(borderEl.value, 10);
-        var marginMm = parseInt(marginEl.value, 10);
-        var single = pageEl.value === 'single';
-        var repeat = fillEl.value === 'repeat';
-
-        var borderPx = mmToPx(borderMm);
-        var padPx = mmToPx(PAD_MM);
-        var stickerW = mmToPx(sizeMm);
-        var anyText = stickers.some(function (s) { return s.text; });
-        var textGapPx = anyText ? mmToPx(parseFloat(textGapEl.value)) : 0;
-        var textPx = anyText ? mmToPx(TEXT_MM) : 0;
-
-        // Height: Auto = width + text strip; fixed = chosen mm (QR shrinks to fit)
-        var stickerHmm = heightEl.value === 'auto' ? null : parseInt(heightEl.value, 10);
-        var stickerH = stickerHmm ? mmToPx(stickerHmm) : stickerW + textGapPx + textPx;
-        var stickerHmmActual = GenShared.pxToMm(stickerH);
-        var sizeLabel = sizeMm + ' × ' + stickerHmmActual + ' mm';
-
-        var ctx = sheetCanvas.getContext('2d');
-
-        saveState();
-
-        if (single) {
-            sheetCanvas.width = stickerW;
-            sheetCanvas.height = stickerH;
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(0, 0, stickerW, stickerH);
-            if (stickers.length) {
-                drawSticker(ctx, 0, 0, stickerW, stickerH, borderPx, padPx, textGapPx, textPx,
-                    stickers[0].text, makeQr(stickers[0].url));
-            }
-            infoEl.textContent = 'Single sticker — ' + sizeLabel;
-            guideEl.style.display = 'none';
-            return;
-        }
-
-        var pageParts = pageEl.value.split('x');
-        var pageWmm = parseInt(pageParts[0], 10);
-        var pageHmm = parseInt(pageParts[1], 10);
-        var pageW = mmToPx(pageWmm);
-        var pageH = mmToPx(pageHmm);
-        var margin = mmToPx(marginMm);
-        var gap = mmToPx(parseInt(gapEl.value, 10));
-        var innerW = pageW - 2 * margin;
-        var innerH = pageH - 2 * margin;
-
-        sheetCanvas.width = pageW;
-        sheetCanvas.height = pageH;
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(0, 0, pageW, pageH);
-
-        // Uniform stickers — grid packing, expanded by count, tiled in order
-        var queue = GenShared.expandQueue(stickers);
-        var result = SheetPack.grid(queue, innerW, innerH, stickerW, stickerH, gap, repeat);
-        result.placements.forEach(function (p) {
-            drawSticker(ctx, margin + p.x, margin + p.y,
-                stickerW, stickerH, borderPx, padPx, textGapPx, textPx, p.s.text, makeQr(p.s.url));
-        });
-        var placed = result.placements.length;
-
-        // Margin guide bounds exactly where stickers are placed
-        GenShared.positionMarginGuide(guideEl, marginMm, pageWmm, pageHmm);
-
-        infoEl.textContent = stickers.length
-            ? 'Sticker ' + sizeLabel + ' — ' + placed + ' of ' + result.slots + ' slots filled (' + result.cols + ' × ' + result.rows + ') on ' + pageWmm + ' × ' + pageHmm + ' mm' + GenShared.overflowNote(result.overflow)
-            : 'Sticker ' + sizeLabel + ' — add a URL to get started (' + result.slots + ' slots, ' + result.cols + ' × ' + result.rows + ', on ' + pageWmm + ' × ' + pageHmm + ' mm)';
-    }
-
-    [sizeEl, heightEl, borderEl, pageEl, marginEl, gapEl, textGapEl, fillEl].forEach(function (el) {
-        el.addEventListener('change', render);
-    });
-
-    document.getElementById('gen-download').addEventListener('click', function () {
-        GenShared.downloadCanvas(sheetCanvas, pageEl.value === 'single'
-            ? 'qr-sticker-' + sizeEl.value + 'mm.png'
-            : 'qr-sheet-' + pageEl.value + 'mm-' + sizeEl.value + 'mm-stickers.png');
-    });
-
-    if (!loadState()) addRow('https://qr.misssponto.me.uk/scan.html', 'SCAN ME', 1);
-    render();
-})();
-</script>
 </body>
 </html>
