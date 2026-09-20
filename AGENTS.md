@@ -16,6 +16,7 @@ The two generator pages (`generator.html`, `text-generator.html`) share code:
 - `js/gen-shared.js` — `window.GenShared` helpers: `mmToPx`/`pxToMm` (300 DPI), `expandQueue` (count expansion), `overflowNote`, `positionMarginGuide`, `attachTsvPaste` (Excel/Sheets paste), `downloadCanvas`.
 - `js/sheet-pack.js` — `window.SheetPack` rectangle packing: `grid` (uniform cells), `shelf` (in-order rows), `maxRects` (best-fit). All take a queue of `{w, h}` items and return `{placements, overflow}` in margin-relative px.
 - `js/qr-sticker.js` / `js/qr-gen.js` — `generator.html` only: `window.QrSticker` single-sticker drawing (`makeQr`, `draw(ctx, opts)`), and the page logic (rows, localStorage state via the `OPTS` element map, presets, render).
+- `js/qr-store.js` — `window.QrStore` named saved-set storage used by both generator pages (`QrStore.mount({type, storageKey, mountEl, getState, applyState})`). Signed in → `{rows, opts}` sets live in the auth database via Better Auth `sticker-set/*` endpoints (`auth.misssponto.me.uk`, or `localhost:3000` in local dev); signed out/unreachable → a localStorage set list. Also JSON export/import of the same `{rows, opts}` payload. Same remote-first/local-fallback idea as JSketcher's `remoteProjectService`.
 
 ## Page Shell
 
