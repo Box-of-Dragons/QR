@@ -53,7 +53,18 @@
 
     var LS_KEY = 'qr-textgen-v1';
 
-    function saveState() {
+    // Option elements keyed by their saved-state name — shared by
+    // persistence and saved sets.
+    var OPTS = {
+        font: fontEl, textsize: textSizeEl, border: borderEl,
+        textstyle: textStyleEl, textcolour: textColourEl, vinyl: vinylEl,
+        rowgap: rowGapEl, letterspace: letterSpaceEl,
+        page: pageEl, margin: marginEl, layout: layoutEl,
+        gap: gapEl, fill: fillEl, cutlines: cutLinesEl
+    };
+
+    // {rows, opts} — the shape persisted to localStorage and to saved sets.
+    function currentState() {
         var rows = [];
         rowsEl.querySelectorAll('tr').forEach(function (tr) {
             rows.push({
@@ -61,17 +72,23 @@
                 count: tr.querySelector('input.gen-count').value
             });
         });
+        var opts = {};
+        Object.keys(OPTS).forEach(function (k) { opts[k] = OPTS[k].value; });
+        return { rows: rows, opts: opts };
+    }
+
+    function applyState(st) {
+        if (!st) return;
+        rowsEl.innerHTML = '';
+        if (st.opts) Object.keys(st.opts).forEach(function (k) {
+            if (OPTS[k] && st.opts[k] != null) OPTS[k].value = st.opts[k];
+        });
+        (st.rows || []).forEach(function (r) { addRow((r.text || '').replace(/\\n/g, '\n'), r.count); });
+    }
+
+    function saveState() {
         try {
-            localStorage.setItem(LS_KEY, JSON.stringify({
-                rows: rows,
-                opts: {
-                    font: fontEl.value, textsize: textSizeEl.value, border: borderEl.value,
-                    textstyle: textStyleEl.value, textcolour: textColourEl.value, vinyl: vinylEl.value,
-                    rowgap: rowGapEl.value, letterspace: letterSpaceEl.value,
-                    page: pageEl.value, margin: marginEl.value, layout: layoutEl.value,
-                    gap: gapEl.value, fill: fillEl.value, cutlines: cutLinesEl.value
-                }
-            }));
+            localStorage.setItem(LS_KEY, JSON.stringify(currentState()));
         } catch (e) {}
     }
 
@@ -79,17 +96,7 @@
         var st;
         try { st = JSON.parse(localStorage.getItem(LS_KEY)); } catch (e) {}
         if (!st) return false;
-        var map = {
-            font: fontEl, textsize: textSizeEl, border: borderEl,
-            textstyle: textStyleEl, textcolour: textColourEl, vinyl: vinylEl,
-            rowgap: rowGapEl, letterspace: letterSpaceEl,
-            page: pageEl, margin: marginEl, layout: layoutEl,
-            gap: gapEl, fill: fillEl, cutlines: cutLinesEl
-        };
-        if (st.opts) Object.keys(st.opts).forEach(function (k) {
-            if (map[k] && st.opts[k] != null) map[k].value = st.opts[k];
-        });
-        (st.rows || []).forEach(function (r) { addRow((r.text || '').replace(/\\n/g, '\n'), r.count); });
+        applyState(st);
         return true;
     }
 
@@ -249,6 +256,17 @@
         GenShared.downloadCanvas(sheetCanvas, pageEl.value === 'single'
             ? 'text-sticker.png'
             : 'text-sticker-sheet-' + pageEl.value + 'mm.png');
+    });
+
+    QrStore.mount({
+        type: 'text',
+        storageKey: 'qr-textgen-sets',
+        mountEl: document.getElementById('gen-store'),
+        getState: currentState,
+        applyState: function (st) {
+            applyState(st);
+            render();
+        }
     });
 
     if (!loadState()) addRow('DO NOT\nTHE MACHINE', 1);
