@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "notes": {
+    "7eac3705f0d6ea1c172c022e9fc47006fceedad8": {
+      "title": "New novelty pages and sticker generators",
+      "details": [
+        "QR novelty pages and sticker generators are now available."
+      ]
+    },
+    "5f086d2a02e320bf2414c1bfb41ea9a4b12239ed": {
+      "title": "Manual release workflow added",
+      "details": [
+        "Releases can now be started manually and tagged automatically."
+      ]
+    },
+    "04db78e39316a2f68773d970f0a1e0566a762c5f": {
+      "title": "Deployment still requires manual upload",
+      "details": [
+        "Release tags are created automatically, but deployment remains manual."
+      ]
+    },
+    "ef153385af7b910101209a88789071c5f497f351": {
+      "title": "Release changes use pull requests",
+      "details": [
+        "The release branch is protected, and development changes are synced through release pull requests."
+      ]
+    },
+    "6fefb6ad035a932113c5827e18da81ba80bf95a1": {
+      "title": "Release automation can create tags",
+      "details": [
+        "The release process can now create release tags."
+      ]
+    },
+    "ec4ec24c1e26e4b2e618a43d9463a15738ed493d": {
+      "title": "Adopt shared release-branch sync for CI",
+      "details": [
+        "CI now synchronizes work through a shared release branch"
+      ]
+    },
+    "1969592134cda671b2ff98534dda73234701a496": {
+      "title": "Disable shared deploy job; keep QR manual",
+      "details": [
+        "Shared deploy job was turned off while preserving manual SCP transfers for QR"
+      ]
+    },
+    "b520b53d47726931bafae29f58f405a6b457e3dd": {
+      "title": "Grant CI permissions for release job content access",
+      "details": [
+        "Fixed permissions so CI can write to contents and pull requests in the release job"
+      ]
+    }
+  },
+  "updatedAt": "2026-09-20T15:38:40.862Z"
+}
