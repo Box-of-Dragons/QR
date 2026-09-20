@@ -1,0 +1,30 @@
+name: PR to dev
+
+# Manual — Actions → PR to dev → Run workflow.
+# Opens (or updates) a PR from the given branch into dev with a conventional
+# title and the commit titles as the body. Tick `merge` to squash-merge it in
+# the same run with that title/body as the commit message.
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Source branch to PR into dev
+        required: true
+        type: string
+      merge:
+        description: Squash-merge the PR immediately after opening it
+        type: boolean
+        default: false
+
+jobs:
+  pr:
+    uses: Box-of-Dragons/StructuredChaos/.github/workflows/family-pr.yml@master
+    permissions:
+      contents: write
+      pull-requests: write
+    with:
+      source-branch: ${{ inputs.branch }}
+      base-branch: dev
+      merge: ${{ inputs.merge }}
+    secrets: inherit
