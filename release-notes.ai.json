@@ -76,7 +76,13 @@
     "767a7480551e1eaaf6ed95767c907a45edd2b911": {
       "title": "Take PR source branch from dispatch ref",
       "details": []
+    },
+    "5b1ae83062f82ee28b95ee92344c61af69f701fd": {
+      "title": "Add named saved sets with account, local, and JSON storage",
+      "details": [
+        "Allows saving sets with names, stored in account, locally, or as JSON."
+      ]
     }
   },
-  "updatedAt": "2026-09-20T20:17:30.620Z"
+  "updatedAt": "2026-09-20T20:38:49.950Z"
 }
