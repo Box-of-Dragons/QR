@@ -74,3 +74,42 @@
     background: var(--primary); color: var(--secondary);
     border: 0; border-radius: 4px;
 }
+
+/* Saved sets (js/qr-store.js) — named sets saved to the account when
+   signed in, browser localStorage otherwise. */
+.gen-store-save { display: flex; gap: 6px; }
+.gen-store-save input {
+    flex: 1; min-width: 0; padding: 8px 10px;
+    border: 1px solid var(--border); border-radius: 4px;
+    font: inherit; box-sizing: border-box;
+}
+.gen-store-save button {
+    padding: 8px 16px; font: inherit; font-weight: 600; cursor: pointer;
+    background: var(--primary); color: var(--secondary);
+    border: 0; border-radius: 4px;
+}
+.gen-store-io { display: flex; gap: 6px; margin-top: 8px; }
+.gen-store-io button {
+    flex: 1; padding: 6px 10px; font: inherit; font-size: 0.85em; cursor: pointer;
+    background: var(--secondary); color: var(--body);
+    border: 1px solid var(--border); border-radius: 4px;
+}
+.gen-store-list { list-style: none; margin: 10px 0 0; padding: 0; }
+.gen-store-list li {
+    display: flex; align-items: baseline; gap: 8px;
+    padding: 6px 0; border-top: 1px solid var(--border);
+}
+.gen-store-load {
+    flex: 1; min-width: 0; padding: 0; border: 0; background: none;
+    font: inherit; text-align: left; cursor: pointer; color: var(--body);
+    letter-spacing: 0; text-transform: none; overflow-wrap: anywhere;
+}
+.gen-store-load:hover { text-decoration: underline; }
+.gen-store-meta { font-size: 0.75em; opacity: 0.7; white-space: nowrap; }
+.gen-store-del {
+    width: 24px; height: 24px; padding: 0; border: 0; background: none;
+    cursor: pointer; color: var(--body); font-size: 1.1em; line-height: 1;
+    letter-spacing: 0; text-transform: none;
+}
+.gen-store-empty { font-size: 0.85em; opacity: 0.7; }
+.gen-store-status { margin-top: 10px; }
