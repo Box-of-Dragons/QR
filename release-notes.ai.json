@@ -82,7 +82,13 @@
       "details": [
         "Allows saving sets with names, stored in account, locally, or as JSON."
       ]
+    },
+    "826ec0e13243e9aa8acd5764c9f8c4399db5aa11": {
+      "title": "Re-check auth session when the tab regains focus",
+      "details": [
+        "The app now verifies your login session again when you return to the tab after switching away."
+      ]
     }
   },
-  "updatedAt": "2026-09-20T20:38:49.950Z"
+  "updatedAt": "2026-09-20T20:50:59.694Z"
 }
