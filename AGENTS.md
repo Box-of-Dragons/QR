@@ -6,7 +6,7 @@ This directory is the local mirror of the `qr.misssponto.me.uk` subdomain docroo
 
 - Static HTML only — no build step, no framework, no CMS.
 - Pages are novelty/one-off pages (e.g. `wifi.html` — Wi-Fi QR code generator).
-- Tracked in git at `Box-of-Dragons/QR` (Conventional Commits — see [docs/git-rules.md](../StructuredChaos/docs/git-rules.md)). The VPS copy is not a repo; deploys are still manual `scp`.
+- Tracked in git at `Box-of-Dragons/QR` (Conventional Commits — see [docs/git-rules.md](../StructuredChaos/docs/git-rules.md)). The VPS docroot is a git checkout of `master` — deploys run through the Release workflow.
 
 ## Shared Generator Code
 
@@ -15,6 +15,7 @@ The two generator pages (`generator.html`, `text-generator.html`) share code:
 - `css/gen.css` — shared `.gen-*` styles (sticker table, options form, sheet preview, margin guide, actions). Loaded after `css/site.css`.
 - `js/gen-shared.js` — `window.GenShared` helpers: `mmToPx`/`pxToMm` (300 DPI), `expandQueue` (count expansion), `overflowNote`, `positionMarginGuide`, `attachTsvPaste` (Excel/Sheets paste), `downloadCanvas`.
 - `js/sheet-pack.js` — `window.SheetPack` rectangle packing: `grid` (uniform cells), `shelf` (in-order rows), `maxRects` (best-fit). All take a queue of `{w, h}` items and return `{placements, overflow}` in margin-relative px.
+- `js/qr-sticker.js` / `js/qr-gen.js` — `generator.html` only: `window.QrSticker` single-sticker drawing (`makeQr`, `draw(ctx, opts)`), and the page logic (rows, localStorage state via the `OPTS` element map, presets, render).
 
 ## Page Shell
 
@@ -44,15 +45,24 @@ npx serve -l 4002 .
 
 Then open e.g. `http://localhost:4002/wifi.html`. For the shared header/footer/styles to render locally, the StructuredChaos site must also be served on `http://localhost:4000`.
 
+## Pull Requests
+
+The manual **PR to dev** workflow (Actions → PR to dev → Run workflow → "Use workflow from" the branch to PR) opens or updates a `branch → dev` PR with a conventional title derived from the commit log and the commit titles as the body. Tick the `merge` input to squash-merge in the same run — the landed commit is `<title> (#<pr>)` + commit titles. Shared machinery lives in `family-pr.yml` (see [docs/git-rules.md](../StructuredChaos/docs/git-rules.md)).
+
 ## Deploying
 
-The manual **Release** workflow (Actions → Release → Run workflow) creates the version tag + GitHub Release, but deploying files is still manual `scp` — the VPS docroot is not a git repo, so the shared `family-deploy` job doesn't apply here.
+The manual **Release** workflow (Actions → Release → Run workflow) is the ship path — it creates the version tag + GitHub Release and deploys to the VPS in one run.
 
-The VPS docroot is `/home/misssponto-qr/htdocs/www.qr.misssponto.me.uk/` (nginx serves it directly, no app process). Deploy by copying files and fixing ownership:
+The VPS docroot is `/home/misssponto-qr/htdocs/www.qr.misssponto.me.uk/` — a git checkout of this repo's `master` branch (nginx serves it directly, no app process, no build step). Deploys run through the Release workflow like the rest of the family: the shared deploy job SSHes in as `misssponto-qr`, fetches + resets the checkout, then runs `scripts/deploy.sh` — which only writes `js/buildInfo.js` (version + commit for the footer) from the latest `vX.Y.Z` tag. The file is generated per-deploy and gitignored.
+
+### Manual deploy (fallback)
 
 ```bash
-scp wifi.html root@77.68.76.203:/home/misssponto-qr/htdocs/www.qr.misssponto.me.uk/
-ssh root@77.68.76.203 "chown misssponto-qr:misssponto-qr /home/misssponto-qr/htdocs/www.qr.misssponto.me.uk/wifi.html && chmod 664 /home/misssponto-qr/htdocs/www.qr.misssponto.me.uk/wifi.html"
+ssh misssponto-qr@77.68.76.203
+cd htdocs/www.qr.misssponto.me.uk
+git fetch origin master && git reset --hard origin/master
 ```
+
+Untracked files in the docroot (e.g. `.well-known/`) survive deploys — `git reset --hard` only touches tracked files. Do **not** add files to the docroot out-of-band without also committing them to the repo, or they'll drift.
 
 Public URL: `https://qr.misssponto.me.uk/`

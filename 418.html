@@ -3,47 +3,62 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Device Manual — QR</title>
-    <meta name="description" content="Official device manual.">
+    <title>418 Teapot — QR</title>
+    <meta name="description" content="HTTP 418: This server is a teapot.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Open+Sans:wght@400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
     <script>(function(){var h=location.hostname;var l=h==='localhost'||h==='127.0.0.1'||h.indexOf('.ddev.site')!==-1;var b=(l?'http://localhost:4000':'https://misssponto.me.uk');document.write('<link rel="stylesheet" href="'+b+'/css/shared.css">');})();</script>
     <link rel="stylesheet" href="/css/site.css">
     <style>
-        .manual-page {
+        .teapot-page {
             font-family: 'Courier New', Courier, monospace;
             border: 2px solid var(--body);
             padding: 40px;
             max-width: 640px;
             margin: 0 auto;
             background: var(--tertiary);
-        }
-        .manual-page header {
             text-align: center;
+        }
+        .teapot-page header {
             border-bottom: 2px solid var(--body);
             padding-bottom: 16px;
             margin-bottom: 32px;
         }
-        .manual-page h2 {
+        .teapot-page h2 {
             font-family: 'Courier New', Courier, monospace;
+            font-size: 3em;
             letter-spacing: 4px;
             margin: 0;
         }
-        .manual-page .manual-meta {
+        .teapot-page .teapot-status {
             font-size: 0.85em;
             margin-top: 8px;
         }
-        .manual-page ol {
-            font-size: 1.4em;
-            line-height: 2;
+        .teapot-art {
+            display: inline-block;
+            max-width: 100%;
+            font-family: inherit;
+            font-size: 1em;
+            line-height: 1.3;
+            margin: 24px 0;
+            text-align: left;
         }
-        .manual-page footer {
+        .teapot-page .teapot-brew {
+            margin-top: 32px;
+        }
+        .teapot-page .teapot-refusal {
+            margin-top: 16px;
+            font-weight: 700;
+        }
+        .teapot-page .teapot-refusal[hidden] {
+            display: none;
+        }
+        .teapot-page footer {
             border-top: 1px solid var(--body);
             margin-top: 32px;
             padding-top: 12px;
             font-size: 0.8em;
-            text-align: center;
         }
     </style>
 </head>
@@ -54,19 +69,30 @@
     <div class="shell">
         <div class="container">
             <div class="panel panel--padded">
-                <div class="manual-page">
+                <div class="teapot-page">
                     <header>
-                        <h2>DEVICE MANUAL</h2>
-                        <div class="manual-meta">Model: All of them &nbsp;|&nbsp; Rev. 1.0</div>
+                        <h2>418</h2>
+                        <div class="teapot-status">HTTP 418 &mdash; I'M A TEAPOT</div>
                     </header>
-                    <p><strong>SYMPTOM:</strong> Device is not working.</p>
-                    <p><strong>RESOLUTION:</strong></p>
-                    <ol>
-                        <li>Turn it off.</li>
-                        <li>Turn it on again.</li>
-                    </ol>
-                    <p>If the problem persists, repeat steps 1&ndash;2.</p>
-                    <footer>Page 1 of 1 &nbsp;&mdash;&nbsp; No further documentation exists.</footer>
+                    <p>Request cannot be completed.</p>
+                    <p>This server is a teapot.<br>
+                    Coffee brewing has been permanently disabled.</p>
+                    <pre class="teapot-art">                       (
+            _           ) )
+         _,(_)._        ((
+    ___,(_______).        )
+  ,'__.   /       \    /\_
+ /,' /  |""|       \  /  /
+| | |   |__|       |,'  /
+ \`.|                  /
+  `. :           :    /
+    `.            :.,'
+Stef  `-.________,-'</pre>
+                    <div class="teapot-brew">
+                        <button class="button button-primary" id="brew" type="button">Brew</button>
+                        <p class="teapot-refusal" id="brew-refusal" hidden>Refusing request: short and stout.</p>
+                    </div>
+                    <footer>RFC 2324 &nbsp;&mdash;&nbsp; Hyper Text Coffee Pot Control Protocol</footer>
                 </div>
             </div>
         </div>
@@ -75,6 +101,12 @@
 
 <script src="/js/footer-links.js"></script>
 <div id="site-footer"></div>
+
+<script>
+document.getElementById('brew').addEventListener('click', function () {
+    document.getElementById('brew-refusal').hidden = false;
+});
+</script>
 
 <script>
 (function () {
