@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Technical Support — QR</title>
+    <meta name="description" content="Technical support.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Open+Sans:wght@400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>(function(){var h=location.hostname;var l=h==='localhost'||h==='127.0.0.1'||h.indexOf('.ddev.site')!==-1;var b=(l?'http://localhost:4000':'https://misssponto.me.uk');document.write('<link rel="stylesheet" href="'+b+'/css/shared.css">');})();</script>
+    <link rel="stylesheet" href="/css/site.css">
+    <style>
+        .support-form {
+            font-family: 'Courier New', Courier, monospace;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+        .support-form h2 {
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 4px;
+            text-align: center;
+            border-bottom: 2px solid var(--body);
+            padding-bottom: 16px;
+            margin: 0 0 32px;
+        }
+        .support-form label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .support-form textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            resize: vertical;
+        }
+        .support-form textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .support-form .support-submit {
+            margin-top: 16px;
+        }
+        .support-result {
+            margin-top: 24px;
+            font-size: 1.2em;
+        }
+        .support-result[hidden] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="global-bar"></div>
+
+<main class="page-main">
+    <div class="shell">
+        <div class="container">
+            <div class="panel panel--padded">
+                <div class="support-form">
+                    <h2>TECHNICAL SUPPORT</h2>
+                    <form id="support-form">
+                        <label for="problem">Describe your problem:</label>
+                        <textarea id="problem" rows="5" required></textarea>
+                        <button type="submit" id="support-submit" class="button button-primary support-submit">Submit</button>
+                    </form>
+                    <p class="support-result" id="support-result" hidden></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+document.getElementById('support-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var result = document.getElementById('support-result');
+    var submit = document.getElementById('support-submit');
+    submit.disabled = true;
+    result.hidden = false;
+    result.textContent = 'Processing\u2026';
+    setTimeout(function () {
+        result.textContent = 'That sounds difficult.';
+        submit.disabled = false;
+    }, 1200);
+});
+</script>
+
+<script src="/js/footer-links.js"></script>
+<div id="site-footer"></div>
+
+<script>
+(function () {
+    var host = location.hostname;
+    var isLocal = host === 'localhost' || host === '127.0.0.1' || host.indexOf('.ddev.site') !== -1;
+    var base = (isLocal ? 'http://localhost:4000' : 'https://misssponto.me.uk') + '/js/';
+    ['global-bar.js', 'site-footer.js'].forEach(function (file) {
+        var s = document.createElement('script');
+        s.src = base + file;
+        s.defer = true;
+        document.head.appendChild(s);
+    });
+})();
+</script>
+</body>
+</html>
