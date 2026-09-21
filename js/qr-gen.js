@@ -21,28 +21,39 @@
         height: document.getElementById('gen-height'),
         heightCustom: document.getElementById('gen-height-custom'),
         border: document.getElementById('gen-border'),
+        borderCustom: document.getElementById('gen-border-custom'),
         padding: document.getElementById('gen-padding'),
+        paddingCustom: document.getElementById('gen-padding-custom'),
         page: document.getElementById('gen-page'),
+        pageCustom: document.getElementById('gen-page-custom'),
         margin: document.getElementById('gen-margin'),
+        marginCustom: document.getElementById('gen-margin-custom'),
         gap: document.getElementById('gen-gap'),
+        gapCustom: document.getElementById('gen-gap-custom'),
         textgap: document.getElementById('gen-textgap'),
+        textgapCustom: document.getElementById('gen-textgap-custom'),
         bottompad: document.getElementById('gen-bottompad'),
+        bottompadCustom: document.getElementById('gen-bottompad-custom'),
         fill: document.getElementById('gen-fill'),
         detect: document.getElementById('gen-detect'),
-        offset: document.getElementById('gen-offset')
+        offset: document.getElementById('gen-offset'),
+        offsetCustom: document.getElementById('gen-offset-custom')
     };
 
     function addRow(url, text, count) {
         var tr = document.createElement('tr');
         tr.innerHTML = '<td><input type="text" class="gen-url" placeholder="https://…"></td>' +
-                       '<td><input type="text" class="gen-text" placeholder="Caption"></td>' +
+                       '<td><textarea class="gen-text" rows="1" placeholder="Caption"></textarea></td>' +
                        '<td class="gen-count"><input type="number" class="gen-count" min="1" value="1"></td>' +
                        '<td class="gen-del-cell"><button class="gen-del" type="button" title="Remove row">×</button></td>';
         tr.querySelector('.gen-url').value = url || '';
-        tr.querySelector('.gen-text').value = text || '';
+        var ta = tr.querySelector('.gen-text');
+        ta.value = text || '';
+        ta.addEventListener('input', function () { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; });
+        requestAnimationFrame(function () { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; });
         tr.querySelector('input.gen-count').value = count || 1;
         tr.querySelector('.gen-del').addEventListener('click', function () { tr.remove(); render(); });
-        tr.querySelectorAll('input').forEach(function (inp) { inp.addEventListener('input', render); });
+        tr.querySelectorAll('input, textarea').forEach(function (inp) { inp.addEventListener('input', render); });
         rowsEl.appendChild(tr);
         return tr;
     }
@@ -66,7 +77,7 @@
         rowsEl.querySelectorAll('tr').forEach(function (tr) {
             rows.push({
                 url: tr.querySelector('.gen-url').value,
-                text: tr.querySelector('.gen-text').value,
+                text: tr.querySelector('.gen-text').value.replace(/\n/g, '\\n'),
                 count: tr.querySelector('input.gen-count').value
             });
         });
@@ -81,7 +92,7 @@
         if (st.opts) Object.keys(st.opts).forEach(function (k) {
             if (OPTS[k] && st.opts[k] != null) OPTS[k].value = st.opts[k];
         });
-        (st.rows || []).forEach(function (r) { addRow(r.url, r.text, r.count); });
+        (st.rows || []).forEach(function (r) { addRow(r.url, (r.text || '').replace(/\\n/g, '\n'), r.count); });
     }
 
     function saveState() {
@@ -130,27 +141,41 @@
         presetsEl.appendChild(b);
     });
 
+    // Every 'fooCustom' input shadows its 'foo' select — shown only when the
+    // select is on 'custom'. optValue resolves the effective value either way.
     function syncCustomInputs() {
-        OPTS.sizeCustom.hidden = OPTS.size.value !== 'custom';
-        OPTS.heightCustom.hidden = OPTS.height.value !== 'custom';
+        Object.keys(OPTS).forEach(function (k) {
+            if (/Custom$/.test(k)) OPTS[k].hidden = OPTS[k.slice(0, -6)].value !== 'custom';
+        });
+    }
+
+    function optValue(name) {
+        var v = OPTS[name].value;
+        return v === 'custom' ? OPTS[name + 'Custom'].value : v;
+    }
+
+    function numOpt(name, fallback) {
+        var v = parseFloat(optValue(name));
+        return isFinite(v) ? v : fallback;
     }
 
     function stickerWidthMm() {
-        var v = OPTS.size.value === 'custom' ? parseFloat(OPTS.sizeCustom.value) : parseFloat(OPTS.size.value);
-        return (isFinite(v) && v > 0) ? v : 38;
+        var v = numOpt('size', 38);
+        return v > 0 ? v : 38;
     }
 
     function stickerHeightMm() {
         if (OPTS.height.value === 'auto') return null;
-        var v = OPTS.height.value === 'custom' ? parseFloat(OPTS.heightCustom.value) : parseFloat(OPTS.height.value);
-        return (isFinite(v) && v > 0) ? v : null;
+        var v = numOpt('height', 0);
+        return v > 0 ? v : null;
     }
 
     function render() {
+        syncCustomInputs();
         var stickers = getStickers();
         var sizeMm = stickerWidthMm();
-        var borderMm = parseFloat(OPTS.border.value);
-        var marginMm = parseInt(OPTS.margin.value, 10);
+        var borderMm = numOpt('border', 1);
+        var marginMm = numOpt('margin', 6);
         var single = OPTS.page.value === 'single';
         var repeat = OPTS.fill.value === 'repeat';
 
@@ -158,9 +183,9 @@
         // Auto padding = the QR spec's 4-module quiet zone (and no extra pad);
         // a fixed value is the exact visual gap around the modules.
         var padAuto = OPTS.padding.value === 'auto';
-        var padPx = padAuto ? 0 : mmToPx(parseFloat(OPTS.padding.value));
+        var padPx = padAuto ? 0 : mmToPx(numOpt('padding', 0));
         var quiet = padAuto ? 4 : 0;
-        var offsetPx = mmToPx(parseFloat(OPTS.offset.value));
+        var offsetPx = mmToPx(numOpt('offset', 0));
         // Line detection cuts the centre of the detected line; outline
         // detection cuts its outer edge. Offsets apply on top of that —
         // positive cutPx insets the guide, negative pushes it outside
@@ -169,9 +194,9 @@
         var stickerW = mmToPx(sizeMm);
         var anyText = stickers.some(function (s) { return s.text; });
         var textGapAuto = OPTS.textgap.value === 'auto';
-        var textGapPx = anyText && !textGapAuto ? mmToPx(parseFloat(OPTS.textgap.value)) : 0;
+        var textGapPx = anyText && !textGapAuto ? mmToPx(numOpt('textgap', 0)) : 0;
         var bottomPadAuto = OPTS.bottompad.value === 'auto';
-        var bottomPadPx = anyText && !bottomPadAuto ? mmToPx(parseFloat(OPTS.bottompad.value)) : 0;
+        var bottomPadPx = anyText && !bottomPadAuto ? mmToPx(numOpt('bottompad', 0)) : 0;
         var textPx = anyText ? mmToPx(TEXT_MM) : 0;
 
         var ctx = sheetCanvas.getContext('2d');
@@ -226,13 +251,13 @@
             return;
         }
 
-        var pageParts = OPTS.page.value.split('x');
-        var pageWmm = parseInt(pageParts[0], 10);
-        var pageHmm = parseInt(pageParts[1], 10);
+        var pageParts = optValue('page').toLowerCase().replace('×', 'x').split('x');
+        var pageWmm = parseFloat(pageParts[0]) || 210;
+        var pageHmm = parseFloat(pageParts[1]) || 297;
         var pageW = mmToPx(pageWmm);
         var pageH = mmToPx(pageHmm);
         var margin = mmToPx(marginMm);
-        var gap = mmToPx(parseInt(OPTS.gap.value, 10));
+        var gap = mmToPx(numOpt('gap', 5));
         var innerW = pageW - 2 * margin;
         var innerH = pageH - 2 * margin;
 
@@ -259,20 +284,17 @@
 
     Object.keys(OPTS).forEach(function (k) {
         OPTS[k].addEventListener('change', render);
-    });
-    OPTS.size.addEventListener('change', syncCustomInputs);
-    OPTS.height.addEventListener('change', syncCustomInputs);
-    // Custom mm inputs re-render live, not just on commit
-    [OPTS.sizeCustom, OPTS.heightCustom].forEach(function (el) {
-        el.addEventListener('input', render);
+        // Custom mm inputs re-render live, not just on commit
+        if (/Custom$/.test(k)) OPTS[k].addEventListener('input', render);
     });
 
     document.getElementById('gen-download').addEventListener('click', function () {
         hideCutLines = true;
         render();
+        var pageName = optValue('page').toLowerCase().replace(/[^0-9x.]/g, '');
         GenShared.downloadCanvas(sheetCanvas, OPTS.page.value === 'single'
             ? 'qr-sticker-' + stickerWidthMm() + 'mm.png'
-            : 'qr-sheet-' + OPTS.page.value + 'mm-' + stickerWidthMm() + 'mm-stickers.png');
+            : 'qr-sheet-' + pageName + 'mm-' + stickerWidthMm() + 'mm-stickers.png');
         hideCutLines = false;
         render();
     });
