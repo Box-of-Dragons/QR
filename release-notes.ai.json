@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "notes": {
+    "cd4bb9a12923dc12d1b5fcc69d7630766f47dd13": {
+      "title": "Cleaner page URLs for QR tools",
+      "details": [
+        "Pages now use simple clean URLs, while existing ?page= links still work.",
+        "Footer links, presets, and the default starter URL use the new URLs.",
+        "Printed QR codes remain supported."
+      ]
+    },
+    "5f26038260f417beb73400e3b9377786c89ca468": {
+      "title": "Clean URL guide added",
+      "details": [
+        "The page map and clean URL behavior are documented."
+      ]
+    },
+    "c3b3b5b9b1e825fb5944856766f7d54a7b38d145": {
+      "title": "Custom measurements and multiline captions",
+      "details": [
+        "Add custom values for numeric settings, including page size and sticker spacing.",
+        "Caption fields now support multiple lines with automatic spacing and sizing.",
+        "Sticker options are organized more clearly."
+      ]
+    }
+  },
+  "updatedAt": "2026-09-21T12:45:31.614Z"
+}
