@@ -22,7 +22,19 @@
         "Caption fields now support multiple lines with automatic spacing and sizing.",
         "Sticker options are organized more clearly."
       ]
+    },
+    "49ff152c65a3f187b021db79ab4cf681d0bf2be4": {
+      "title": "Added release notes page that pulls from GitHub releases",
+      "details": [
+        "Shows release information fetched directly from GitHub"
+      ]
+    },
+    "f33f493141be519e1bf1a8a21ecee823980b59de": {
+      "title": "Fixed sticker sizing to match each caption rather than the tallest on the sheet",
+      "details": [
+        "Stickers now scale individually based on their caption length"
+      ]
     }
   },
-  "updatedAt": "2026-09-21T12:45:31.614Z"
+  "updatedAt": "2026-09-21T13:32:27.510Z"
 }
