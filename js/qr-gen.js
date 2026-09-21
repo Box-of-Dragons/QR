@@ -123,7 +123,8 @@
         b.className = 'chip color-pair-' + presetColors[presetIndex++ % presetColors.length];
         b.textContent = l.label;
         b.addEventListener('click', function () {
-            addRow('https://qr.misssponto.me.uk' + l.href, l.label.toUpperCase(), 1);
+            var pageId = l.href.slice(l.href.lastIndexOf('/') + 1).replace(/\.html$/, '');
+            addRow('https://qr.misssponto.me.uk/?page=' + pageId, l.label.toUpperCase(), 1);
             render();
         });
         presetsEl.appendChild(b);
@@ -288,7 +289,7 @@
         }
     });
 
-    if (!loadState()) addRow('https://qr.misssponto.me.uk/scan.html', 'SCAN ME', 1);
+    if (!loadState()) addRow('https://qr.misssponto.me.uk/?page=scan', 'SCAN ME', 1);
     syncCustomInputs();
     render();
 })();
