@@ -23,6 +23,8 @@ window.SITE_FOOTER = {
         { label: 'Wi-Fi', href: '/wifi' },
         { separator: true },
         { label: 'Text Generator', href: '/text-generator' },
-        { label: 'QR Generator', href: '/generator' }
+        { label: 'QR Generator', href: '/generator' },
+        { separator: true },
+        { label: 'Release Notes', href: '/release-notes' }
     ]
 };
