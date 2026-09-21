@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Release Notes — QR</title>
+    <meta name="description" content="Release notes for the QR site.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Open+Sans:wght@400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>(function(){var h=location.hostname;var l=h==='localhost'||h==='127.0.0.1'||h.indexOf('.ddev.site')!==-1;var b=(l?'http://localhost:4000':'https://misssponto.me.uk');document.write('<link rel="stylesheet" href="'+b+'/css/shared.css">');})();</script>
+    <link rel="stylesheet" href="/css/site.css">
+    <style>
+        .release h3 { margin: 0 0 4px; }
+        .release .release-date {
+            font-size: 0.85em; color: var(--body-light);
+            margin: 0 0 12px; display: block;
+        }
+        .release .release-body > :first-child { margin-top: 0; }
+        .release .release-body > :last-child { margin-bottom: 0; }
+        .release-prerelease {
+            font-size: 0.75em; font-weight: 700; letter-spacing: 1px;
+            text-transform: uppercase; color: var(--primary);
+            vertical-align: middle; margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+<div id="global-bar"></div>
+
+<main class="page-main">
+    <div class="shell">
+        <div class="container">
+            <div class="panel panel--padded">
+                <h3>Release Notes</h3>
+                <p>What changed, when — pulled live from GitHub.</p>
+            </div>
+            <div id="releases"><div class="panel panel--padded"><p>Loading…</p></div></div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js" crossorigin="anonymous"></script>
+<script>
+(function () {
+    var el = document.getElementById('releases');
+    var repo = 'Box-of-Dragons/QR';
+    fetch('https://api.github.com/repos/' + repo + '/releases')
+        .then(function (r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+        })
+        .then(function (releases) {
+            if (!releases.length) {
+                el.innerHTML = '<div class="panel panel--padded"><p>No releases yet.</p></div>';
+                return;
+            }
+            el.innerHTML = '';
+            releases.forEach(function (rel) {
+                var article = document.createElement('article');
+                article.className = 'release panel panel--padded';
+                var h = document.createElement('h3');
+                var a = document.createElement('a');
+                a.href = rel.html_url;
+                a.textContent = rel.name || rel.tag_name;
+                h.appendChild(a);
+                if (rel.prerelease) {
+                    var badge = document.createElement('span');
+                    badge.className = 'release-prerelease';
+                    badge.textContent = 'pre-release';
+                    h.appendChild(badge);
+                }
+                var date = document.createElement('span');
+                date.className = 'release-date';
+                date.textContent = new Date(rel.published_at).toLocaleDateString('en-GB', {
+                    day: 'numeric', month: 'long', year: 'numeric'
+                });
+                var body = document.createElement('div');
+                body.className = 'release-body';
+                var md = (rel.body || '').replace(/^\s*#{1,6}\s+.*(\r?\n)?/, ''); // drop the title line — already the heading
+                if (md && typeof window.marked !== 'undefined') {
+                    body.innerHTML = window.marked.parse(md);
+                } else {
+                    body.textContent = md;
+                }
+                article.appendChild(h);
+                article.appendChild(date);
+                article.appendChild(body);
+                el.appendChild(article);
+            });
+        })
+        .catch(function () {
+            el.innerHTML = '<div class="panel panel--padded"><p>Couldn\u2019t load release notes — see ' +
+                '<a href="https://github.com/' + repo + '/releases">github.com/' + repo + '/releases</a>.</p></div>';
+        });
+})();
+</script>
+
+<script src="/js/footer-links.js"></script>
+<div id="site-footer"></div>
+
+<script>
+(function () {
+    var host = location.hostname;
+    var isLocal = host === 'localhost' || host === '127.0.0.1' || host.indexOf('.ddev.site') !== -1;
+    var base = (isLocal ? 'http://localhost:4000' : 'https://misssponto.me.uk') + '/js/';
+    ['global-bar.js', 'site-footer.js'].forEach(function (file) {
+        var s = document.createElement('script');
+        s.src = base + file;
+        s.defer = true;
+        document.head.appendChild(s);
+    });
+})();
+</script>
+</body>
+</html>
