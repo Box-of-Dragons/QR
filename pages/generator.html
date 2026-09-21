@@ -85,7 +85,9 @@
                                 <option value="0.5">0.5 mm</option>
                                 <option value="1" selected>1 mm</option>
                                 <option value="1.5">1.5 mm</option>
+                                <option value="custom">Custom…</option>
                             </select>
+                            <input type="number" id="gen-border-custom" min="0" max="10" step="0.1" value="1" hidden>
 
                             <label for="gen-padding">Padding</label>
                             <select id="gen-padding">
@@ -95,35 +97,10 @@
                                 <option value="2">2 mm</option>
                                 <option value="3">3 mm</option>
                                 <option value="5">5 mm</option>
+                                <option value="custom">Custom…</option>
                             </select>
+                            <input type="number" id="gen-padding-custom" min="0" max="30" step="0.5" value="2" hidden>
                             <p class="caption">Auto adds the recommended 4-module quiet zone for reliable scanning.</p>
-
-                            <div class="gen-group">Sheet</div>
-                            <label for="gen-page">Page size</label>
-                            <select id="gen-page">
-                                <option value="single">Single sticker</option>
-                                <option value="210x297" selected>A4 (210 × 297 mm)</option>
-                                <option value="148x210">A5 (148 × 210 mm)</option>
-                                <option value="216x279">Letter (216 × 279 mm)</option>
-                            </select>
-
-                            <label for="gen-margin">Page margin</label>
-                            <select id="gen-margin">
-                                <option value="5">5 mm</option>
-                                <option value="6" selected>6 mm</option>
-                                <option value="7">7 mm</option>
-                                <option value="8">8 mm</option>
-                                <option value="9">9 mm</option>
-                                <option value="10">10 mm</option>
-                            </select>
-
-                            <label for="gen-gap">Sticker spacing</label>
-                            <select id="gen-gap">
-                                <option value="0">None</option>
-                                <option value="2">2 mm</option>
-                                <option value="5" selected>5 mm</option>
-                                <option value="10">10 mm</option>
-                            </select>
 
                             <label for="gen-textgap">Caption gap</label>
                             <select id="gen-textgap">
@@ -137,7 +114,9 @@
                                 <option value="4">4 mm</option>
                                 <option value="5">5 mm</option>
                                 <option value="6">6 mm</option>
+                                <option value="custom">Custom…</option>
                             </select>
+                            <input type="number" id="gen-textgap-custom" min="-10" max="30" step="0.5" value="1" hidden>
                             <p class="caption">Gap between the QR and the caption. Auto matches the padding.</p>
 
                             <label for="gen-bottompad">Bottom padding</label>
@@ -152,8 +131,48 @@
                                 <option value="4">4 mm</option>
                                 <option value="5">5 mm</option>
                                 <option value="6">6 mm</option>
+                                <option value="custom">Custom…</option>
                             </select>
+                            <input type="number" id="gen-bottompad-custom" min="0" max="30" step="0.5" value="2" hidden>
                             <p class="caption">Gap under the caption. Auto takes the remaining space.</p>
+
+                            <div class="gen-group">Sheet</div>
+                            <label for="gen-page">Page size</label>
+                            <select id="gen-page">
+                                <option value="single">Single sticker</option>
+                                <option value="210x297" selected>A4 (210 × 297 mm)</option>
+                                <option value="148x210">A5 (148 × 210 mm)</option>
+                                <option value="216x279">Letter (216 × 279 mm)</option>
+                                <option value="305x305">ScanNCut mat (305 × 305 mm)</option>
+                                <option value="custom">Custom…</option>
+                            </select>
+                            <input type="text" id="gen-page-custom" placeholder="Width × height mm, e.g. 305x610" hidden>
+
+                            <label for="gen-margin">Page margin</label>
+                            <select id="gen-margin">
+                                <option value="5">5 mm</option>
+                                <option value="6" selected>6 mm</option>
+                                <option value="7">7 mm</option>
+                                <option value="8">8 mm</option>
+                                <option value="9">9 mm</option>
+                                <option value="10">10 mm</option>
+                                <option value="custom">Custom…</option>
+                            </select>
+                            <input type="number" id="gen-margin-custom" min="0" max="50" step="0.5" value="6" hidden>
+
+                            <label for="gen-gap">Sticker spacing</label>
+                            <select id="gen-gap">
+                                <option value="0">None</option>
+                                <option value="1">1 mm</option>
+                                <option value="2">2 mm</option>
+                                <option value="3">3 mm</option>
+                                <option value="4">4 mm</option>
+                                <option value="5" selected>5 mm</option>
+                                <option value="6">6 mm</option>
+                                <option value="10">10 mm</option>
+                                <option value="custom">Custom…</option>
+                            </select>
+                            <input type="number" id="gen-gap-custom" min="0" max="100" step="0.5" value="5" hidden>
 
                             <label for="gen-fill">Empty slots</label>
                             <select id="gen-fill">
@@ -179,7 +198,9 @@
                                 <option value="1">+1 mm</option>
                                 <option value="1.5">+1.5 mm</option>
                                 <option value="2">+2 mm</option>
+                                <option value="custom">Custom…</option>
                             </select>
+                            <input type="number" id="gen-offset-custom" min="-5" max="5" step="0.1" value="0" hidden>
                             <p class="caption">The ScanNCut can offset its cut line after scan detection. This option just visualises where the cutter will cut the media.</p>
 
                             <div class="gen-group">Presets</div>

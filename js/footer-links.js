@@ -15,14 +15,14 @@ window.SITE_FOOTER = {
     links: [
         { label: 'Home', href: '/' },
         { separator: true },
-        { label: '418 Teapot', href: '/418.html' },
-        { label: 'Device Manual', href: '/manual.html' },
-        { label: 'Scan', href: '/scan.html' },
-        { label: 'Security Check', href: '/secure.html' },
-        { label: 'Support', href: '/support.html' },
-        { label: 'Wi-Fi', href: '/wifi.html' },
+        { label: '418 Teapot', href: '/418' },
+        { label: 'Device Manual', href: '/manual' },
+        { label: 'Scan', href: '/scan' },
+        { label: 'Security Check', href: '/secure' },
+        { label: 'Support', href: '/support' },
+        { label: 'Wi-Fi', href: '/wifi' },
         { separator: true },
-        { label: 'Text Generator', href: '/text-generator.html' },
-        { label: 'QR Generator', href: '/generator.html' }
+        { label: 'Text Generator', href: '/text-generator' },
+        { label: 'QR Generator', href: '/generator' }
     ]
 };

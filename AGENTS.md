@@ -1,21 +1,23 @@
 # QR Agent Notes
 
-This directory is the local mirror of the `qr.misssponto.me.uk` subdomain docroot. It holds standalone novelty pages that are accessed via QR codes — there is no site navigation or index of pages; each page is reached by scanning its code.
+This directory is the local mirror of the `qr.misssponto.me.uk` subdomain docroot. It holds standalone novelty pages that are accessed via QR codes — each page is reached by scanning its code; `index.html` is the only landing/dispatch page.
 
 ## Product Model
 
 - Static HTML only — no build step, no framework, no CMS.
-- Pages are novelty/one-off pages (e.g. `wifi.html` — Wi-Fi QR code generator).
+- All pages live in `pages/` (e.g. `pages/wifi.html` — Wi-Fi QR code generator); `index.html` is the only page at the docroot besides assets.
+- Public URLs are clean — `https://qr.misssponto.me.uk/wifi` serves `pages/wifi.html`. nginx does this via `try_files $uri $uri.html $uri/ /pages$uri /pages$uri.html =404;` in `location /` of `/etc/nginx/sites-enabled/www.qr.misssponto.me.uk.conf` (hand-managed, not in git — a dated `.bak` sits alongside). Locally, `serve.json` mirrors it with a `/:page → /pages/:page.html` rewrite.
+- QR codes encode `https://qr.misssponto.me.uk/?page=<name>` — the permanent public URL. `index.html` has a `<head>` script with an explicit name→slug map that redirects to `/<slug>` (only `[a-z0-9-]` names). The map decouples public names from filenames: to move or rename a page file without breaking printed codes, keep the name and change the slug (e.g. `'wifi': 'wi-fi'`). Unmapped names fall back to `/<name>` and 404 if there's no matching file. With no `page` param, `index.html` lists the pages.
 - Tracked in git at `Box-of-Dragons/QR` (Conventional Commits — see [docs/git-rules.md](../StructuredChaos/docs/git-rules.md)). The VPS docroot is a git checkout of `master` — deploys run through the Release workflow.
 
 ## Shared Generator Code
 
-The two generator pages (`generator.html`, `text-generator.html`) share code:
+The two generator pages (`pages/generator.html`, `pages/text-generator.html`) share code:
 
 - `css/gen.css` — shared `.gen-*` styles (sticker table, options form, sheet preview, margin guide, actions). Loaded after `css/site.css`.
 - `js/gen-shared.js` — `window.GenShared` helpers: `mmToPx`/`pxToMm` (300 DPI), `expandQueue` (count expansion), `overflowNote`, `positionMarginGuide`, `attachTsvPaste` (Excel/Sheets paste), `downloadCanvas`.
 - `js/sheet-pack.js` — `window.SheetPack` rectangle packing: `grid` (uniform cells), `shelf` (in-order rows), `maxRects` (best-fit). All take a queue of `{w, h}` items and return `{placements, overflow}` in margin-relative px.
-- `js/qr-sticker.js` / `js/qr-gen.js` — `generator.html` only: `window.QrSticker` single-sticker drawing (`makeQr`, `draw(ctx, opts)`), and the page logic (rows, localStorage state via the `OPTS` element map, presets, render).
+- `js/qr-sticker.js` / `js/qr-gen.js` — `pages/generator.html` only: `window.QrSticker` single-sticker drawing (`makeQr`, `draw(ctx, opts)`), and the page logic (rows, localStorage state via the `OPTS` element map, presets that emit `?page=` URLs, render).
 - `js/qr-store.js` — `window.QrStore` named saved-set storage used by both generator pages (`QrStore.mount({type, storageKey, mountEl, getState, applyState})`). Signed in → `{rows, opts}` sets live in the auth database via Better Auth `sticker-set/*` endpoints (`auth.misssponto.me.uk`, or `localhost:3000` in local dev); signed out/unreachable → a localStorage set list. Also JSON export/import of the same `{rows, opts}` payload. Same remote-first/local-fallback idea as JSketcher's `remoteProjectService`.
 
 ## Page Shell
@@ -44,7 +46,7 @@ Serve the folder with any static server:
 npx serve -l 4002 .
 ```
 
-Then open e.g. `http://localhost:4002/wifi.html`. For the shared header/footer/styles to render locally, the StructuredChaos site must also be served on `http://localhost:4000`.
+Then open e.g. `http://localhost:4002/?page=wifi` or `http://localhost:4002/wifi`. For the shared header/footer/styles to render locally, the StructuredChaos site must also be served on `http://localhost:4000`.
 
 ## Pull Requests
 

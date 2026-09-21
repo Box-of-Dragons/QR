@@ -5,6 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>QR</title>
     <meta name="description" content="Landing pages for novelty QR codes.">
+    <script>
+    // QR codes encode /?page=<name> — the permanent public URL. This map
+    // resolves the name to a clean URL slug (nginx serves it from
+    // /pages/<slug>.html). To move or rename a page file without breaking
+    // printed codes, keep the name and change the slug — e.g. renaming
+    // wifi.html to wi-fi.html means 'wifi': 'wi-fi'. Unmapped names fall
+    // back to /<name> and 404 if there's no matching file.
+    (function () {
+        var m = /[?&]page=([a-z0-9-]+)/i.exec(location.search);
+        if (!m) return;
+        var pages = {
+            '418': '418',
+            'manual': 'manual',
+            'scan': 'scan',
+            'secure': 'secure',
+            'support': 'support',
+            'wifi': 'wifi',
+            'generator': 'generator',
+            'text-generator': 'text-generator'
+        };
+        var name = m[1].toLowerCase();
+        location.replace('/' + (pages[name] || name));
+    })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Open+Sans:wght@400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
@@ -23,19 +47,19 @@
             <div class="panel panel--padded">
                 <h3>Pages</h3>
                 <ul>
-                    <li><a href="/418.html">418 Teapot</a></li>
-                    <li><a href="/manual.html">Device Manual</a></li>
-                    <li><a href="/scan.html">Scan</a></li>
-                    <li><a href="/secure.html">Security Check</a></li>
-                    <li><a href="/support.html">Support</a></li>
-                    <li><a href="/wifi.html">Wi-Fi</a></li>
+                    <li><a href="/418">418 Teapot</a></li>
+                    <li><a href="/manual">Device Manual</a></li>
+                    <li><a href="/scan">Scan</a></li>
+                    <li><a href="/secure">Security Check</a></li>
+                    <li><a href="/support">Support</a></li>
+                    <li><a href="/wifi">Wi-Fi</a></li>
                 </ul>
             </div>
             <div class="panel panel--padded">
                 <h3>Generators</h3>
                 <ul>
-                    <li><a href="/text-generator.html">Text Generator</a> — printable die-cut style text sticker sheets</li>
-                    <li><a href="/generator.html">QR Generator</a> — printable QR code sticker sheets</li>
+                    <li><a href="/text-generator">Text Generator</a> — printable die-cut style text sticker sheets</li>
+                    <li><a href="/generator">QR Generator</a> — printable QR code sticker sheets</li>
                 </ul>
             </div>
         </div>

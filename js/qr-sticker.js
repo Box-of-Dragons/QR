@@ -22,7 +22,8 @@
  *   showCuts      - draw dashed cut lines (preview only, never in downloads)
  *
  * QrSticker.captionHeight(ctx, textPx, text) - measured glyph bounds
- *   ({asc, desc, glyphH, font}) so layout can use the real text height.
+ *   ({asc, desc, glyphH, font, lines, lineH}) so layout can use the real
+ *   text height. Text may contain \n — lines stack at lineH spacing.
  */
 window.QrSticker = (function () {
     var mmToPx = GenShared.mmToPx;
@@ -34,16 +35,20 @@ window.QrSticker = (function () {
 
     function captionHeight(ctx, textPx, text) {
         var fontPx = Math.round(textPx * 0.55);
+        var lineH = Math.round(fontPx * 1.2);
         var font = '600 ' + fontPx + 'px "Open Sans", sans-serif';
+        var lines = String(text).split('\n');
         if (!scratch) scratch = document.createElement('canvas');
         var sctx = scratch.getContext('2d', { willReadFrequently: true });
         sctx.font = font;
+        var w = 8;
+        lines.forEach(function (l) { w = Math.max(w, Math.ceil(sctx.measureText(l).width) + 8); });
         var baseline = fontPx * 1.5;
-        scratch.width = Math.ceil(sctx.measureText(text).width) + 8;
-        scratch.height = fontPx * 3;
+        scratch.width = w;
+        scratch.height = Math.ceil(baseline + (lines.length - 1) * lineH + fontPx * 1.5);
         sctx.font = font; // resizing the canvas resets its state
         sctx.textBaseline = 'alphabetic';
-        sctx.fillText(text, 4, baseline);
+        lines.forEach(function (l, i) { sctx.fillText(l, 4, baseline + i * lineH); });
         var img = sctx.getImageData(0, 0, scratch.width, scratch.height).data;
         var top = -1, bot = -1;
         for (var y = 0; y < scratch.height; y++) {
@@ -55,8 +60,10 @@ window.QrSticker = (function () {
                 }
             }
         }
-        if (top === -1) { top = baseline - fontPx * 0.72; bot = baseline; }
-        return { asc: baseline - top, desc: bot - baseline, glyphH: bot - top + 1, font: font };
+        if (top === -1) { top = baseline - fontPx * 0.72; bot = baseline + (lines.length - 1) * lineH; }
+        var lastBaseline = baseline + (lines.length - 1) * lineH;
+        return { asc: baseline - top, desc: bot - lastBaseline, glyphH: bot - top + 1,
+                 font: font, lines: lines, lineH: lineH };
     }
 
     function makeQr(url) {
@@ -135,7 +142,10 @@ window.QrSticker = (function () {
             ctx.textAlign = 'center';
             ctx.textBaseline = 'alphabetic';
             var inkBottom = qrOffY + qrActual - quietPx;
-            ctx.fillText(o.text, o.x + o.w / 2, inkBottom + capGapPx + cap.asc, innerW);
+            var firstBaseline = inkBottom + capGapPx + cap.asc;
+            cap.lines.forEach(function (l, i) {
+                ctx.fillText(l, o.x + o.w / 2, firstBaseline + i * cap.lineH, innerW);
+            });
         }
 
         // ScanNCut cut lines (dashed) — preview only, never in the download.
