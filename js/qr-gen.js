@@ -201,15 +201,18 @@
 
         var ctx = sheetCanvas.getContext('2d');
 
-        // Height: Auto = width + space below the QR square needed for the
-        // caption. Auto values flex to absorb the leftover band below the
-        // QR ink — the height targets each auto side at the padding
+        // Height: a fixed value is uniform; Auto sizes each sticker to its
+        // own caption — width + space below the QR square the caption needs.
+        // Auto values flex to absorb the leftover band below the QR ink —
+        // the height targets each auto side at the padding
         // (padPx + quiet zone); fixed values are exact.
         var stickerHmm = stickerHeightMm();
-        var reservePx = 0;
-        if (anyText) {
-            var innerWEst = stickerW - 2 * (borderPx + padPx);
-            stickers.forEach(function (s) {
+        var uniformH = !!stickerHmm;
+        var innerWEst = stickerW - 2 * (borderPx + padPx);
+        var maxH = stickerW;
+        stickers.forEach(function (s) {
+            var reservePx = 0;
+            if (s.text) {
                 var countI = makeQr(s.url).getModuleCount();
                 var cellEst = Math.max(1, Math.floor(innerWEst / (countI + quiet * 2)));
                 var remEst = Math.floor((innerWEst - cellEst * (countI + quiet * 2)) / 2);
@@ -219,18 +222,22 @@
                 var botEst = bottomPadAuto ? padEst : bottomPadPx;
                 var belowSq = gapEst + botEst + glyphH - quiet * cellEst
                     - (bottomPadAuto ? remEst : 0);
-                reservePx = Math.max(reservePx, Math.max(0, belowSq));
-            });
-        }
-        var stickerH = stickerHmm ? mmToPx(stickerHmm) : stickerW + reservePx;
-        var stickerHmmActual = GenShared.pxToMm(stickerH);
-        var sizeLabel = sizeMm + ' × ' + stickerHmmActual + ' mm';
+                reservePx = Math.max(0, belowSq);
+            }
+            s.w = stickerW;
+            s.h = uniformH ? mmToPx(stickerHmm) : stickerW + reservePx;
+            if (s.h > maxH) maxH = s.h;
+        });
+        var stickerH = uniformH ? mmToPx(stickerHmm) : maxH;
+        var sameH = stickers.every(function (s) { return s.h === maxH; });
+        var sizeLabel = sizeMm + ' × ' + GenShared.pxToMm(stickerH) + ' mm' +
+            (uniformH || sameH ? '' : ' max');
 
         saveState();
 
         function place(x, y, s) {
             QrSticker.draw(ctx, {
-                x: x, y: y, w: stickerW, h: stickerH,
+                x: x, y: y, w: stickerW, h: s.h,
                 borderPx: borderPx, padPx: padPx,
                 textGapPx: textGapPx, textGapAuto: textGapAuto,
                 bottomPadPx: bottomPadPx, bottomPadAuto: bottomPadAuto,
@@ -241,12 +248,13 @@
         }
 
         if (single) {
+            var singleH = stickers.length ? stickers[0].h : stickerW;
             sheetCanvas.width = stickerW;
-            sheetCanvas.height = stickerH;
+            sheetCanvas.height = singleH;
             ctx.fillStyle = '#fff';
-            ctx.fillRect(0, 0, stickerW, stickerH);
+            ctx.fillRect(0, 0, stickerW, singleH);
             if (stickers.length) place(0, 0, stickers[0]);
-            infoEl.textContent = 'Single sticker — ' + sizeLabel;
+            infoEl.textContent = 'Single sticker — ' + sizeMm + ' × ' + GenShared.pxToMm(singleH) + ' mm';
             guideEl.style.display = 'none';
             return;
         }
@@ -266,9 +274,13 @@
         ctx.fillStyle = '#fff';
         ctx.fillRect(0, 0, pageW, pageH);
 
-        // Uniform stickers — grid packing, expanded by count, tiled in order
+        // Uniform heights → grid (neat cells); variable auto heights → shelf
+        // rows (each row's height is its tallest sticker, columns still align
+        // since widths are uniform). Queue expands rows by count.
         var queue = GenShared.expandQueue(stickers);
-        var result = SheetPack.grid(queue, innerW, innerH, stickerW, stickerH, gap, repeat);
+        var result = uniformH
+            ? SheetPack.grid(queue, innerW, innerH, stickerW, stickerH, gap, repeat)
+            : SheetPack.shelf(queue, innerW, innerH, gap, repeat);
         result.placements.forEach(function (p) {
             place(margin + p.x, margin + p.y, p.s);
         });
@@ -277,9 +289,16 @@
         // Margin guide bounds exactly where stickers are placed
         GenShared.positionMarginGuide(guideEl, marginMm, pageWmm, pageHmm);
 
-        infoEl.textContent = stickers.length
-            ? 'Sticker ' + sizeLabel + ' — ' + placed + ' of ' + result.slots + ' slots filled (' + result.cols + ' × ' + result.rows + ') on ' + pageWmm + ' × ' + pageHmm + ' mm' + GenShared.overflowNote(result.overflow)
-            : 'Sticker ' + sizeLabel + ' — add a URL to get started (' + result.slots + ' slots, ' + result.cols + ' × ' + result.rows + ', on ' + pageWmm + ' × ' + pageHmm + ' mm)';
+        var sheetDesc = 'Sticker ' + sizeLabel + ' on ' + pageWmm + ' × ' + pageHmm + ' mm';
+        if (!stickers.length) {
+            infoEl.textContent = uniformH
+                ? 'Sticker ' + sizeLabel + ' — add a URL to get started (' + result.slots + ' slots, ' + result.cols + ' × ' + result.rows + ', on ' + pageWmm + ' × ' + pageHmm + ' mm)'
+                : sheetDesc + ' — add a URL to get started';
+        } else {
+            infoEl.textContent = uniformH
+                ? 'Sticker ' + sizeLabel + ' — ' + placed + ' of ' + result.slots + ' slots filled (' + result.cols + ' × ' + result.rows + ') on ' + pageWmm + ' × ' + pageHmm + ' mm' + GenShared.overflowNote(result.overflow)
+                : sheetDesc + ' — ' + placed + ' placed' + GenShared.overflowNote(result.overflow);
+        }
     }
 
     Object.keys(OPTS).forEach(function (k) {
